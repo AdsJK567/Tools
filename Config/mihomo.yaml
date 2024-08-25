@@ -1,16 +1,16 @@
 #!name = mihomo TUN 配置文件
 #!desc = 说明：理论上适用于所有的 Meta 内核，已测试的有 Clash Verg Rev、Openclash、mihomo 使用最新的 mrs 规则
 #!date = 2024-08-24 22:15
-#!source = https://wiki.metacubex.one/example/conf/#__tabbed_1_2
-#!author = thNylHx
+#!source = https://wiki.metacubex.one/example/conf/#_ip_iptabbed_ip1_ip2
+#!author = AdsJK567
 
 # 这里是机场订阅更新和延迟测试相关锚点
-pr: &pr {type: http, interval: 3600, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
+pr: &pr {type: http, interval: 3600, health-check: {enable: true, url: https://www.gstatic.com/generate_ip204, interval: 300}}
 
 # 机场订阅
 
 # 全局配置
-# 开启 IPv6 总开关，可选：true/false
+# 开启 v6 总开关，可选：true/false
 ipv6: true
 # 允许局域网连接
 allow-lan: true
@@ -18,7 +18,7 @@ allow-lan: true
 mixed-port: 7890
 # 更换延迟计算方式,去除握手等额外延迟
 unified-delay: true
-# TCP 并发连接所有 IP, 将使用最快握手的 TCP
+# TCP 并发连接所有 , 将使用最快握手的 TCP
 tcp-concurrent: true
 
 # 配置 WEB UI
@@ -109,9 +109,9 @@ pg: &pg {type: select, proxies: [手动选择, 自动选择, 香港节点, 台�
 # 手动选择策略
 mt: &mt {type: select, include-all-providers: true}
 # 自动优选策略
-at: &at {type: url-test, include-all-providers: true, url: https://www.gstatic.com/generate_204, tolerance: 10, interval: 300}
+at: &at {type: url-test, include-all-providers: true, url: https://www.gstatic.com/generate_ip204, tolerance: 10, interval: 300}
 # 负载均衡策略
-lb: &lb {type: load-balance, include-all: true, interval: 300, url: https://www.gstatic.com/generate_204}
+lb: &lb {type: load-balance, include-all: true, interval: 300, url: https://www.gstatic.com/generate_ip204}
 
 # 策略组
 proxy-groups:
@@ -147,13 +147,11 @@ proxy-groups:
 # 规则策略
 rules:
   # 域名规则
-  - RULE-SET,Local_IP,China,no-resolve
-  - RULE-SET,BlockAds,REJECT
-  - RULE-SET,BlockPrivacy,REJECT
+  - RULE-SET,Local_ip,China,no-resolve
   - RULE-SET,OpenAI,ChatGPT
   - RULE-SET,YouTube,YouTube
   - RULE-SET,Google,Google
-  - RULE-SET,Google_IP,Google
+  - RULE-SET,Google_ip,Google
   - RULE-SET,GitHub,Microsoft
   - RULE-SET,OneDrive,Microsoft
   - RULE-SET,Microsoft,Microsoft
@@ -162,20 +160,20 @@ rules:
   - RULE-SET,PayPal,PayPal
   - RULE-SET,Spotify,Spotify
   - RULE-SET,Twitter,Twitter
-  - RULE-SET,Twitter_IP,Twitter
+  - RULE-SET,Twitter_ip,Twitter
   - RULE-SET,Telegram,Telegram
-  - RULE-SET,Telegram_IP,Telegram
+  - RULE-SET,Telegram_ip,Telegram
   - RULE-SET,Instagram,Facebook
   - RULE-SET,Facebook,Facebook
-  - RULE-SET,Facebook_IP,Facebook
+  - RULE-SET,Facebook_ip,Facebook
   - RULE-SET,TikTok,TikTok
   - RULE-SET,Disney,Disney
   - RULE-SET,Netflix,Netflix
-  - RULE-SET,Netflix_IP,Netflix
+  - RULE-SET,Netflix_ip,Netflix
   - RULE-SET,Apple,Apple
   - RULE-SET,Bilibili,Bilibili
   - RULE-SET,China,China
-  - RULE-SET,China_IP,China
+  - RULE-SET,China_ip,China
   - RULE-SET,GlobalGFW,Global
   - MATCH,Global
 
@@ -185,49 +183,44 @@ rule-anchor:
   ipcidr: &ipcidr {type: http, interval: 43200, behavior: ipcidr, format: mrs}
   # domain 规则相关
   domain: &domain {type: http, interval: 43200, behavior: domain, format: mrs}
-  # classical 规则相关
-  classical: &classical {type: http, interval: 43200, behavior: classical, format: text}
 
 # 规则集订阅
 rule-providers:
-  # 广告
-  BlockAds: {<<: *classical, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/Block/BlockAds.list}
-  BlockPrivacy: {<<: *classical, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/Block/BlockPrivacy.list}
   # ChatGPT
-  OpenAI: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Openai.mrs}
+  OpenAI: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Openai.mrs}
   # 谷歌
-  YouTube: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/YouTube.mrs}
-  Google: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Google.mrs}
+  YouTube: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/YouTube.mrs}
+  Google: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Google.mrs}
   # 微软
-  GitHub: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/GitHub.mrs}
-  OneDrive: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/OneDrive.mrs}
-  Microsoft: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Microsoft.mrs}
+  GitHub: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/GitHub.mrs}
+  OneDrive: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/OneDrive.mrs}
+  Microsoft: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Microsoft.mrs}
   # 游戏
-  Epic: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Epic.mrs}
-  Steam: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Steam.mrs}
+  Epic: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Epic.mrs}
+  Steam: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Steam.mrs}
   # 社交
-  Telegram: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/telegram.mrs}
-  Facebook: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Facebook.mrs}
-  Instagram: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Instagram.mrs}
-  PayPal: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/PayPal.mrs}
-  Twitter: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Twitter.mrs}
-  Spotify: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Spotify.mrs}
+  Telegram: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/telegram.mrs}
+  Facebook: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Facebook.mrs}
+  Instagram: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Instagram.mrs}
+  PayPal: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/PayPal.mrs}
+  Twitter: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Twitter.mrs}
+  Spotify: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Spotify.mrs}
   # 影视
-  Netflix: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Netflix.mrs}
-  Disney: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Disney.mrs}
-  TikTok: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/tiktok.mrs}
+  Netflix: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Netflix.mrs}
+  Disney: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Disney.mrs}
+  TikTok: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/tiktok.mrs}
   # 海外
-  GlobalGFW: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Global.mrs}
+  GlobalGFW: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Global.mrs}
   # 苹果
-  Apple: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Apple.mrs}
+  Apple: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Apple.mrs}
   # 国内
-  Bilibili: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/Bilibili.mrs}
-  China: {<<: *domain, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/China.mrs}
+  Bilibili: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/Bilibili.mrs}
+  China: {<<: *domain, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geosite/China.mrs}
   # ipcidr
-  Google_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/GoogleIP.mrs}
-  Twitter_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/TwitterIP.mrs}
-  Netflix_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/NetflixIP.mrs}
-  Telegram_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/telegramIP.mrs}
-  Facebook_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/FacebookIP.mrs}
-  China_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/ChinaIP.mrs}
-  Local_IP: {<<: *ipcidr, url: https://github.com/thNylHx/Tools/raw/main/Ruleset/ClashMeta/LocalIP.mrs}
+  Google_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/Google.mrs}
+  Twitter_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/Twitter.mrs}
+  Netflix_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/Netflix.mrs}
+  Telegram_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/telegram.mrs}
+  Facebook_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/Facebook.mrs}
+  China_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/China.mrs}
+  Local_ip: {<<: *ipcidr, url: https://github.com/AdsJK567/Tools/raw/main/Ruleset/mihomo/geoip/Local.mrs}
