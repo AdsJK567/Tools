@@ -1,8 +1,8 @@
 #!/bin/bash
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-25 10:20
-#!author = thNylHx ChatGPT
+#!date = 2024-08-25 18:00
+#!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
 
@@ -12,7 +12,7 @@ Red_font_prefix="\033[31m"
 Font_color_suffix="\033[0m"
 
 # 定义脚本版本
-sh_ver="1.3.1"
+sh_ver="1.3.2"
 
 # 定义全局变量
 FOLDERS="/root/mihomo"
@@ -234,7 +234,7 @@ Update_Shell() {
     # 获取当前版本
     echo -e "${Green_font_prefix}开始检查是否有更新${Font_color_suffix}"
     # 获取最新版本号
-    sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/thNylHx/Tools/main/Script/mihomo-install.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     # 最新版本无需更新
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green_font_prefix}${sh_ver}${Font_color_suffix} ]"
@@ -251,7 +251,7 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green_font_prefix}${sh_new_ver}${Font_color_suffix} ]"
-                wget -O mihomo-install.sh --no-check-certificate https://raw.githubusercontent.com/thNylHx/Tools/main/Script/mihomo-install.sh
+                wget -O mihomo-install.sh --no-check-certificate https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh
                 chmod +x mihomo-install.sh
                 echo -e "更新完成，当前版本已更新为 ${Green_font_prefix}[ v${sh_new_ver} ]${Font_color_suffix}"
                 echo -e "5 秒后执行新脚本"
@@ -320,7 +320,7 @@ Install() {
     git clone https://github.com/metacubex/metacubexd.git -b gh-pages "$WEB_SERVICES"
     # 下载系统配置文件
     echo -e "${Green_font_prefix}开始下载 mihomo 的 Service 系统配置${Font_color_suffix}"
-    wget -O "$SYSTEM_FILE" https://raw.githubusercontent.com/thNylHx/Tools/main/Service/mihomo.service && chmod 755 "$SYSTEM_FILE"
+    wget -O "$SYSTEM_FILE" https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green_font_prefix}mihomo 安装完成，开始配置${Font_color_suffix}"
     # 开始配置 config 文件
     Configure
@@ -409,7 +409,7 @@ Configure() {
     # 检查是否安装
     Check_install
     # 下载配置文件
-    CONFIG_URL="https://raw.githubusercontent.com/thNylHx/Tools/main/Config/mihomo/mihomo.yaml"
+    CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo.yaml"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
     # 获取用户输入的机场数量，默认为 1，且限制为 5 个以内
     while true; do
@@ -481,7 +481,7 @@ Main() {
     clear
     echo "================================="
     echo -e "${Green_font_prefix}欢迎使用 mihomo 一键脚本 Beta 版${Font_color_suffix}"
-    echo -e "${Green_font_prefix}作者：${Font_color_suffix}${Red_font_prefix}thNylHx${Font_color_suffix}"
+    echo -e "${Green_font_prefix}作者：${Font_color_suffix}${Red_font_prefix}AdsJK567${Font_color_suffix}"
     echo -e "${Green_font_prefix}请保证科学上网已经开启${Font_color_suffix}"
     echo -e "${Green_font_prefix}安装过程中可以按 ctrl+c 强制退出${Font_color_suffix}"
     echo "================================="
