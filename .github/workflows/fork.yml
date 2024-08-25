@@ -1,4 +1,4 @@
-name: Fork & Edit
+name: 自动同步上游仓库
 
 on:
   workflow_dispatch:  # 支持手动触发工作流
