@@ -61,7 +61,7 @@ curl -L -o Tools-repo/Ruleset/mihomo/geosite/OneDrive.list "https://raw.githubus
 curl -L -o Tools-repo/Ruleset/mihomo/geosite/Microsoft.list "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.list"
 
 # PayPal
-curl -L -o Tools-repo/Ruleset/mihomo//PayPal.list "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.list"
+curl -L -o Tools-repo/Ruleset/mihomo/geosite/PayPal.list "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.list"
 
 
 # Local
