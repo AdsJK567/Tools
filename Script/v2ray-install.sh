@@ -1,8 +1,8 @@
 #!/bin/bash
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-25 10:20
-#!author = thNylHx ChatGPT
+#!date = 2024-08-25 18:00
+#!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
 
@@ -237,7 +237,7 @@ Update_Shell() {
     # 获取当前版本
     echo -e "${Green_font_prefix}开始检查是否有更新${Font_color_suffix}"
     # 获取最新版本号
-    sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/thNylHx/Tools/main/Script/v2ray-install.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    sh_new_ver=$(wget --no-check-certificate -qO- "https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/v2ray-install.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     # 最新版本无需更新
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green_font_prefix}${sh_ver}${Font_color_suffix} ]"
@@ -254,7 +254,7 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本：[ ${Green_font_prefix}${sh_new_ver}${Font_color_suffix} ]"
-                wget -O v2ray-install.sh --no-check-certificate https://raw.githubusercontent.com/thNylHx/Tools/main/Script/v2ray-install.sh
+                wget -O v2ray-install.sh --no-check-certificate https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/v2ray-install.sh
                 chmod +x v2ray-install.sh
                 echo -e "更新完成，当前版本已更新为：[ ${Green_font_prefix}v${sh_new_ver}${Font_color_suffix} ]"
                 echo -e "5 秒后执行新脚本"
@@ -310,7 +310,7 @@ Install() {
     echo "$VERSION" > "$VERSION_FILE"
     # 下载系统配置文件
     echo -e "${Green_font_prefix}开始下载 v2ray 的 Service 系统配置${Font_color_suffix}"
-    wget -O "$SYSTEM_FILE" https://raw.githubusercontent.com/thNylHx/Tools/main/Service/v2ray.service && chmod 755 "$SYSTEM_FILE"
+    wget -O "$SYSTEM_FILE" https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/v2ray.service && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green_font_prefix}v2ray 安装完成，开始配置${Font_color_suffix}"
     # 开始配置 config 文件
     Configure
@@ -386,7 +386,7 @@ Configure() {
     # 检查是否安装
     Check_install
     # 下载基础配置文件
-    CONFIG_URL="https://raw.githubusercontent.com/thNylHx/Tools/main/Config/v2ray/v2ray.json"
+    CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/v2ray.json"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
     # 开始配置
     echo -e "${Green_font_prefix}v2ray 开始配置${Font_color_suffix}"
@@ -700,7 +700,7 @@ Request_Cert() {
     clear
     echo "================================="
     echo -e "${Green_font_prefix}欢迎使用 ACME 一键 SSL 证书申请脚本 Beta 版${Font_color_suffix}"
-    echo -e "${Green_font_prefix}作者：${Font_color_suffix}${Red_font_prefix}thNylHx${Font_color_suffix}"
+    echo -e "${Green_font_prefix}作者：${Font_color_suffix}${Red_font_prefix}AdsJK567${Font_color_suffix}"
     echo -e "${Green_font_prefix}安装过程中可以按 ctrl+c 强制退出${Font_color_suffix}"
     echo "================================="
     echo "使用说明书："
@@ -731,7 +731,7 @@ Main() {
     clear
     echo "================================="
     echo -e "${Green_font_prefix}欢迎使用 v2ray 一键脚本 Beta 版${Font_color_suffix}"
-    echo -e "${Green_font_prefix}作者：${Font_color_suffix}${Red_font_prefix}thNylHx${Font_color_suffix}"
+    echo -e "${Green_font_prefix}作者：${Font_color_suffix}${Red_font_prefix}AdsJK567${Font_color_suffix}"
     echo -e "${Green_font_prefix}请保证科学上网已经开启${Font_color_suffix}"
     echo -e "${Green_font_prefix}安装过程中可以按 ctrl+c 强制退出${Font_color_suffix}"
     echo "================================="
