@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 创建规则目录
-mkdir -p Tools/Ruleset/mihomo{geosite,geoip}
+mkdir -p Tools/Ruleset/mihomo/{geosite,geoip}
 
 
 #!/bin/bash
