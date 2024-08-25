@@ -1,30 +1,43 @@
 name: Fork & Edit
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "15 */6 * * *"
-  
+  workflow_dispatch:  # 支持手动触发工作流
+  schedule:           # 定时触发工作流
+    - cron: "15 */6 * * *"  # 每6小时的第15分钟触发一次
+
 jobs:
-  Fork-FLITER-list:
-    runs-on: ubuntu-latest
-    env:
-      TZ: 'Asia/Shanghai'
-    
-    steps: 
-    - name: Checkout target repository
-      uses: actions/checkout@v4.1.0
+  Fork-FLITER-list:    # 定义名为 Fork-FLITER-list 的作业
+    runs-on: ubuntu-latest  # 使用最新版本的 Ubuntu 运行
+
+    env:                # 设置环境变量
+      TZ: 'Asia/Shanghai'  # 设置时区为亚洲/上海
+
+    steps:              # 定义作业的执行步骤
+    - name: 检出目标仓库   # 第一步：检出目标仓库
+      uses: actions/checkout@v4.1.0  # 使用 actions/checkout@v4.1.0 操作
       with:
-        repository: AdsJK567/Tools
-        path: Tools-repo
+        repository: AdsJK567/Tools   # 指定要检出的仓库
+        path: Tools-repo             # 设置检出的路径为 Tools-repo
 
-    - name: 复刻
+    - name: 运行复刻脚本  # 第二步：运行复刻脚本
       run: |
-        curl https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/fork.sh | sh
+        curl -sSL https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/fork.sh | sh  # 使用 curl 下载并运行 fork.sh 脚本
 
+    - name: 添加并提交更改  # 第三步：添加并提交更改
+      run: |
+        cd Tools-repo
+        if [[ -n $(git status -s) ]]; then  # 检查是否有未提交的更改
+          git config --local user.email "action@github.com"  # 设置 Git 用户邮件
+          git config --local user.name "GitHub Action"       # 设置 Git 用户名
+          git add .                                          # 添加所有更改
+          git commit -m "Auto Update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')"  # 提交更改并附加时间戳
+          git push origin HEAD  # 推送到远程仓库
+        else
+          echo "No changes to commit."  # 没有更改需要提交时输出提示
+        fi
 
-    - name: Cleanup Workflow
+    - name: 清理工作流运行历史  # 第四步：清理工作流运行历史
       uses: Mattraks/delete-workflow-runs@main
       with:
-        retain_days: 0
-        keep_minimum_runs: 5
+        retain_days: 0            # 保留 0 天的历史记录
+        keep_minimum_runs: 5      # 保留最近的 5 次工作流运行记录
