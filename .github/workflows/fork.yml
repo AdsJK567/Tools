@@ -1,0 +1,30 @@
+name: Fork & Edit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 */6 * * *"
+  
+jobs:
+  Fork-FLITER-list:
+    runs-on: ubuntu-latest
+    env:
+      TZ: 'Asia/Shanghai'
+    
+    steps: 
+    - name: Checkout target repository
+      uses: actions/checkout@v4.1.0
+      with:
+        repository: AdsJK567/Tools
+        path: Tools-repo
+
+    - name: 复刻
+      run: |
+        curl https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/fork.sh | sh
+
+
+    - name: Cleanup Workflow
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 0
+        keep_minimum_runs: 5
