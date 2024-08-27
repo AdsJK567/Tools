@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本 Beta 加速版
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-27 08:30
+#!date = 2024-08-27 09:30
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.5"
+sh_ver="1.0.7"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -239,7 +239,8 @@ Update_Shell() {
     # 获取当前版本
     echo -e "${Green}开始检查是否有更新${Reset}"
     # 获取最新版本号
-    sh_new_ver=$(wget --no-check-certificate -qO- "https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    sh_ver_url="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-cdn.sh"
+    sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     # 最新版本无需更新
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
@@ -256,7 +257,7 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O mihomo-install.sh --no-check-certificate https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh
+                wget -O mihomo-install.sh --no-check-certificate "$sh_ver_url"
                 chmod +x mihomo-install.sh
                 echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
                 echo -e "5 秒后执行新脚本"
