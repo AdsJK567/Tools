@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = realm 一键脚本 Beta 加速版
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-2297 17:00
+#!date = 2024-08-2297 18:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.1"
+sh_ver="1.0.2"
 
 # 全局变量路径
 FOLDERS="/root/realm"
@@ -266,7 +266,7 @@ Install() {
     Get_the_schema
     echo -e "当前架构：[ ${Green}${ARCH_RAW}${Reset} ]"
     # 获取版本信息
-    VERSION_URL="https://api.github.com/repos/zhboner/realm/releases/latest"
+    VERSION_URL="https://gh-proxy.com/https://api.github.com/repos/zhboner/realm/releases/latest"
     VERSION=$(curl -sSL "$VERSION_URL" | grep tag_name | cut -d ":" -f2 | sed 's/\"//g;s/\,//g;s/\ //g;s/v//' || { echo -e "${Red}获取版本信息失败${Reset}"; exit 1; })
     # 构造文件名
     case "$ARCH" in
@@ -277,16 +277,8 @@ Install() {
     DOWNLOAD_URL="https://gh-proxy.com/https://github.com/zhboner/realm/releases/download/v${VERSION}/${FILENAME}"
     echo -e "当前版本：[ ${Green}${VERSION}${Reset} ]"
     wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
-    echo -e "[ ${Green}${VERSION}${Reset} ] 下载完成，开始安装"
     # 解压文件
-    tar -xzvf "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
-    # 重命名
-    if [ -f "realm-${ARCH}-unknown-linux-gnu.tar.gz" ]; then
-        mv "realm-${ARCH}-unknown-linux-gnu.tar.gz" realm
-    else
-        echo -e "${Red}找不到解压后的文件${Reset}"
-        exit 1
-    fi
+    tar -xzvf "$FILENAME" && rm -f "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
     # 授权
     chmod 755 realm
     # 记录版本信息
@@ -311,7 +303,7 @@ Update() {
     # 获取当前版本
     CURRENT_VERSION=$(Get_current_version)
     # 获取版本信息
-    VERSION_URL="https://api.github.com/repos/zhboner/realm/releases/latest"
+    VERSION_URL="https://gh-proxy.com/https://api.github.com/repos/zhboner/realm/releases/latest"
     VERSION=$(curl -sSL "$VERSION_URL" | grep tag_name | cut -d ":" -f2 | sed 's/\"//g;s/\,//g;s/\ //g;s/v//' || { echo -e "${Red}获取版本信息失败${Reset}"; exit 1; })
     # 开始更新
     if [ "$CURRENT_VERSION" == "$LATEST_VERSION" ]; then
@@ -340,14 +332,7 @@ Update() {
                 wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
                 echo -e "[ ${Green}${LATEST_VERSION}${Reset} ] 下载完成，开始更新"
                 # 解压文件
-                tar -xzvf "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
-                # 重命名
-                if [ -f "realm-${ARCH}-unknown-linux-gnu.tar.gz" ]; then
-                    mv "realm-${ARCH}-unknown-linux-gnu.tar.gz" realm
-                else
-                    echo -e "${Red}找不到下载后的文件${Reset}"
-                    exit 1
-                fi
+                tar -xzvf "$FILENAME" && rm -f "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
                 # 授权
                 chmod 755 realm
                 # 更新版本信息
