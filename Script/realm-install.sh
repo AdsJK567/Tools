@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = realm 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-2297 17:00
+#!date = 2024-08-2297 18:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -211,7 +211,7 @@ Update_Shell() {
     # 获取当前版本
     echo -e "${Green}开始检查是否有更新${Reset}"
     # 获取最新版本号
-    sh_ver_url="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/realm-install.sh"
+    sh_ver_url="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/realm-cdn.sh"
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     # 最新版本无需更新
     if [ "$sh_ver" == "$sh_new_ver" ]; then
@@ -229,12 +229,12 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O realm-install.sh --no-check-certificate "$sh_ver_url"
-                chmod +x realm-install.sh
+                wget -O realm-cdn.sh --no-check-certificate "$sh_ver_url"
+                chmod +x realm-cdn.sh
                 echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
                 echo -e "5 秒后执行新脚本"
                 sleep 5s
-                bash realm-install.sh
+                bash realm-cdn.sh
                 break
                 ;;
             [Nn]* )
@@ -277,16 +277,8 @@ Install() {
     DOWNLOAD_URL="https://github.com/zhboner/realm/releases/download/v${VERSION}/${FILENAME}"
     echo -e "当前版本：[ ${Green}${VERSION}${Reset} ]"
     wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
-    echo -e "[ ${Green}${VERSION}${Reset} ] 下载完成，开始安装"
     # 解压文件
-    tar -xzvf "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
-    # 重命名
-    if [ -f "realm-${ARCH}-unknown-linux-gnu.tar.gz" ]; then
-        mv "realm-${ARCH}-unknown-linux-gnu.tar.gz" realm
-    else
-        echo -e "${Red}找不到解压后的文件${Reset}"
-        exit 1
-    fi
+    tar -xzvf "$FILENAME" && rm -f "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
     # 授权
     chmod 755 realm
     # 记录版本信息
@@ -340,14 +332,7 @@ Update() {
                 wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
                 echo -e "[ ${Green}${LATEST_VERSION}${Reset} ] 下载完成，开始更新"
                 # 解压文件
-                tar -xzvf "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
-                # 重命名
-                if [ -f "realm-${ARCH}-unknown-linux-gnu.tar.gz" ]; then
-                    mv "realm-${ARCH}-unknown-linux-gnu.tar.gz" realm
-                else
-                    echo -e "${Red}找不到下载后的文件${Reset}"
-                    exit 1
-                fi
+                tar -xzvf "$FILENAME" && rm -f "$FILENAME" || { echo -e "${Red}解压失败${Reset}"; exit 1; }
                 # 授权
                 chmod 755 realm
                 # 更新版本信息
@@ -384,7 +369,7 @@ Main() {
     echo "================================="
     echo -e "${Green}欢迎使用 realm 一键脚本 Beta 加速版${Reset}"
     echo -e "${Green}作者：${Reset}${Red}AdsJK567${Reset}"
-    echo -e "${Green}需要科学上网环境${Reset}"
+    echo -e "${Green}请保证科学上网已经开启${Reset}"
     echo -e "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
     echo "================================="
     echo -e "${Green}0${Reset}、更新脚本"
