@@ -384,7 +384,7 @@ Main() {
     echo "================================="
     echo -e "${Green}欢迎使用 realm 一键脚本 Beta 加速版${Reset}"
     echo -e "${Green}作者：${Reset}${Red}AdsJK567${Reset}"
-    echo -e "${Green}启用国内 CDN 加速${Reset}"
+    echo -e "${Green}需要科学上网环境${Reset}"
     echo -e "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
     echo "================================="
     echo -e "${Green}0${Reset}、更新脚本"
