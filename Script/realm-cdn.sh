@@ -229,12 +229,12 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O realm-install.sh --no-check-certificate "$sh_ver_url"
-                chmod +x realm-install.sh
+                wget -O realm-cdn.sh --no-check-certificate "$sh_ver_url"
+                chmod +x realm-cdn.sh
                 echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
                 echo -e "5 秒后执行新脚本"
                 sleep 5s
-                bash realm-install.sh
+                bash realm-cdn.sh
                 break
                 ;;
             [Nn]* )
