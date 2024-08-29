@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = realm 一键脚本 Beta 加速版
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-27 09:30
+#!date = 2024-08-2297 17:00
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.7"
+sh_ver="1.0.1"
 
 # 全局变量路径
 FOLDERS="/root/realm"
@@ -274,7 +274,7 @@ Install() {
         *)       echo -e "不支持的架构：[ ${Red}${ARCH}${Reset} ]"; exit 1;;
     esac
     # 开始下载
-    DOWNLOAD_URL="https://gh-proxy.com/https://github.com/zhboner/realm/releases/download/${VERSION}/${FILENAME}"
+    DOWNLOAD_URL="https://gh-proxy.com/https://github.com/zhboner/realm/releases/download/v${VERSION}/${FILENAME}"
     echo -e "当前版本：[ ${Green}${VERSION}${Reset} ]"
     wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
     echo -e "[ ${Green}${VERSION}${Reset} ] 下载完成，开始安装"
@@ -291,10 +291,10 @@ Install() {
     chmod 755 realm
     # 记录版本信息
     echo "$VERSION" > "$VERSION_FILE"
-    # 下载 UI
+    # 下载配置文件
     echo -e "${Green}开始下载 realm 配置文件${Reset}"
     CONFIG_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/config.toml"
-    git clone "$CONFIG_URL" -b gh-pages "$CONFIG_FILE"
+    wget -O "$CONFIG_FILE" "$CONFIG_URL" || { echo -e "${Red}下载配置文件失败${Reset}"; exit 1; }
     # 下载系统配置文件
     echo -e "${Green}开始下载 realm 的 Service 系统配置${Reset}"
     SERVICE_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/realm.service"
@@ -335,7 +335,7 @@ Update() {
                     *)       echo -e "不支持的架构：[ ${Red}${ARCH}${Reset} ]"; exit 1;;
                 esac
                 # 开始下载
-                DOWNLOAD_URL="https://gh-proxy.com/https://github.com/zhboner/realm/releases/download/${VERSION}/${FILENAME}"
+                DOWNLOAD_URL="https://gh-proxy.com/https://github.com/zhboner/realm/releases/download/v${VERSION}/${FILENAME}"
                 echo -e "开始下载最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
                 wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
                 echo -e "[ ${Green}${LATEST_VERSION}${Reset} ] 下载完成，开始更新"
@@ -402,7 +402,7 @@ Main() {
     echo "================================="
     read -p "请输入选项[0-8]：" num
     case "$num" in
-        1) Check_ip_forward; Install ;;
+        1) Install ;;
         2) Update ;;
         3) Uninstall ;;
         5) Start ;;
