@@ -292,6 +292,15 @@ Install() {
     SERVICE_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/realm.service"
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green}realm 安装完成${Reset}"
+    # 重新加载 systemd
+    systemctl daemon-reload
+    # 立即启动 realm 服务
+    systemctl start realm
+    # # 检查 realm 服务状态
+    # systemctl status realm
+    echo -e "${Green}已设置开机自启${Reset}"
+    # 设置开机启动
+    systemctl enable realm
 }
 
 # 更新
