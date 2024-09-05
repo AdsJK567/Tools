@@ -301,6 +301,7 @@ Install() {
     echo -e "${Green}已设置开机自启${Reset}"
     # 设置开机启动
     systemctl enable realm
+    Start_Main
 }
 
 # 更新
