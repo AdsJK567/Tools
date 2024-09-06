@@ -257,7 +257,7 @@ Install() {
         Start_Main
     fi
     # 更新系统
-    apt update && apt dist-upgrade -y
+    # apt update && apt dist-upgrade -y
     # 安装插件
     apt-get install unzip curl git wget -y
     # 创建文件夹
