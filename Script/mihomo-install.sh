@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本
-#!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-27 09:30
+#!desc = 支持，安装、更新、卸载、修改配置等
+#!date = 2024-09-06 21:00
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.3.5"
+sh_ver="1.3.6"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -451,9 +451,9 @@ Configure() {
       additional-prefix: \"[$airport_name]\""
     done
     # 修改配置文件
-    echo -e "${Green}修改配置文件${Reset}"
+    echo -e "${Green}正在修改配置文件${Reset}"
     # 写入配置文件
-    echo -e "${Green}写入配置文件${Reset}"
+    echo -e "${Green}开始写入配置文件${Reset}"
     # 使用 awk 将 proxy-providers 插入到指定位置
     awk -v providers="$proxy_providers" '
     /^# 机场订阅/ {
@@ -474,9 +474,9 @@ Configure() {
     systemctl start mihomo
     # # 检查 mihomo 服务状态
     # systemctl status mihomo
-    echo -e "${Green}已设置开机自启${Reset}"
     # 设置开机启动
     systemctl enable mihomo
+    echo -e "${Green}已设置开机自启动${Reset}"
     # 调用函数获取
     GetLocal_ip
     # 引导语
@@ -493,9 +493,11 @@ Main() {
     echo -e "${Green}欢迎使用 mihomo 一键脚本 Beta 版${Reset}"
     echo -e "${Green}作者：${Yellow}${Red}AdsJK567${Reset}"
     echo -e "${Green}请保证科学上网已经开启${Reset}"
+    echo -e "${Green}选项3，可以修改你的机场订阅链接${Reset}"
     echo -e "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
     echo "================================="
     echo -e "${Green}0${Reset}、更新脚本"
+    echo -e "${Green}8${Reset}、退出脚本"
     echo "---------------------------------"
     echo -e "${Green}1${Reset}、安装 mihomo"
     echo -e "${Green}2${Reset}、更新 mihomo"
@@ -505,7 +507,6 @@ Main() {
     echo -e "${Green}5${Reset}、启动 mihomo"
     echo -e "${Green}6${Reset}、停止 mihomo"
     echo -e "${Green}7${Reset}、重启 mihomo"
-    echo -e "${Green}8${Reset}、退出脚本"
     echo "================================="
     Show_Status
     echo "================================="
