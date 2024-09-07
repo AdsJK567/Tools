@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载、修改配置等
-#!date = 2024-09-06 21:00
+#!date = 2024-09-07 08:40
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.3.6"
+sh_ver="1.3.7"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -125,7 +125,7 @@ Check_ip_forward() {
     echo -e "${Green}IP 转发开启成功${Reset}"
 }
 
-# 启动服务
+# 启动
 Start() {
     # 检查是否安装
     Check_install
@@ -135,6 +135,8 @@ Start() {
     fi
     echo -e "${Green}mihomo 准备启动中${Reset}"
     # 重新加载
+    systemctl reload mihomo
+    # 发送启动命令
     systemctl enable mihomo
     # 启动服务
     if systemctl start mihomo; then
@@ -155,7 +157,7 @@ Start() {
     Start_Main
 }
 
-# 停止服务
+# 停止
 Stop() {
     # 检查是否安装
     Check_install
@@ -184,11 +186,13 @@ Stop() {
     Start_Main
 }
 
-# 重启服务
+# 重启
 Restart() {
     # 检查是否安装
     Check_install
     echo -e "${Green}mihomo 准备重启中${Reset}"
+    # 重新加载
+    systemctl reload mihomo
     # 重启服务
     if systemctl restart mihomo; then
         echo -e "${Green}mihomo 重启命令已发出${Reset}"
@@ -285,7 +289,7 @@ Install() {
         Start_Main
     fi
     # 更新系统
-    apt update && apt dist-upgrade -y
+    # apt update && apt dist-upgrade -y
     # 安装插件
     apt-get install jq unzip curl git wget vim dnsutils openssl coreutils grep gawk iptables -y
     # 创建文件夹
@@ -388,9 +392,9 @@ Update() {
                 chmod 755 mihomo
                 # 更新版本信息
                 echo "$LATEST_VERSION" > "$VERSION_FILE"
-                # 重新加载 systemd
+                # 重新加载
                 systemctl daemon-reload
-                # 重启 mihomo 服务
+                # 重启
                 systemctl restart mihomo
                 echo -e "更新完成，当前版本已更新为：[ ${Green}${LATEST_VERSION}${Reset} ]"
                 # 检查并显示服务状态
@@ -403,11 +407,11 @@ Update() {
                 Start_Main
                 ;;
             [Nn]* )
-                echo -e "${Red}更新已取消 ${Reset}"
+                echo -e "${Red}更新已取消${Reset}"
                 Start_Main
                 ;;
             * )
-                echo -e "${Red}无效的输入，请输入 y 或 n ${Reset}"
+                echo -e "${Red}无效的输入，请输入 y 或 n${Reset}"
                 ;;
         esac
     done
@@ -496,17 +500,17 @@ Main() {
     echo -e "${Green}选项3，可以修改你的机场订阅链接${Reset}"
     echo -e "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
     echo "================================="
-    echo -e "${Green}0${Reset}、更新脚本"
-    echo -e "${Green}8${Reset}、退出脚本"
+    echo -e "${Green} 0${Reset}、更新脚本"
+    echo -e "${Green} 8${Reset}、退出脚本"
     echo "---------------------------------"
-    echo -e "${Green}1${Reset}、安装 mihomo"
-    echo -e "${Green}2${Reset}、更新 mihomo"
-    echo -e "${Green}3${Reset}、配置 mihomo"
-    echo -e "${Green}4${Reset}、卸载 mihomo"
+    echo -e "${Green} 1${Reset}、安装 mihomo"
+    echo -e "${Green} 2${Reset}、更新 mihomo"
+    echo -e "${Green} 3${Reset}、配置 mihomo"
+    echo -e "${Green} 4${Reset}、卸载 mihomo"
     echo "---------------------------------"
-    echo -e "${Green}5${Reset}、启动 mihomo"
-    echo -e "${Green}6${Reset}、停止 mihomo"
-    echo -e "${Green}7${Reset}、重启 mihomo"
+    echo -e "${Green} 5${Reset}、启动 mihomo"
+    echo -e "${Green} 6${Reset}、停止 mihomo"
+    echo -e "${Green} 7${Reset}、重启 mihomo"
     echo "================================="
     Show_Status
     echo "================================="
