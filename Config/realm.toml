@@ -1,0 +1,5 @@
+[log]
+level = "warn"
+output = "root/realm/realm.log"
+
+# 转发规则
