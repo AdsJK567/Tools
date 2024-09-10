@@ -285,7 +285,7 @@ Install() {
     echo "$VERSION" > "$VERSION_FILE"
     # 下载配置文件
     echo -e "${Green}开始下载 realm 配置文件${Reset}"
-    CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/config.toml"
+    CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/realm.toml"
     wget -O "$CONFIG_FILE" "$CONFIG_URL" || { echo -e "${Red}下载配置文件失败${Reset}"; exit 1; }
     # 下载系统配置文件
     echo -e "${Green}开始下载 realm 的 Service 系统配置${Reset}"
