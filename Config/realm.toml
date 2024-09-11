@@ -2,4 +2,8 @@
 level = "warn"
 output = "root/realm/realm.log"
 
+[network]
+no_tcp = false
+use_udp = true
+
 # 转发规则
