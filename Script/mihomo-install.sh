@@ -468,7 +468,7 @@ Configure() {
     echo -e "${Green}mihomo 配置已完成并保存到 ${CONFIG_FILE} 文件夹${Reset}"
     echo -e "${Green}mihomo 配置完成，正在启动中${Reset}"
     # 重新加载 systemd
-    systemctl daemon-reload
+    # systemctl daemon-reload
     # 立即启动 mihomo 服务
     systemctl start mihomo
     # # 检查 mihomo 服务状态
