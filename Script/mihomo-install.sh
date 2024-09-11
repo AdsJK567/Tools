@@ -134,8 +134,6 @@ Start() {
         Start_Main
     fi
     echo -e "${Green}mihomo 准备启动中${Reset}"
-    # 重新加载
-    systemctl reload mihomo
     # 发送启动命令
     systemctl enable mihomo
     # 启动服务
@@ -191,8 +189,6 @@ Restart() {
     # 检查是否安装
     Check_install
     echo -e "${Green}mihomo 准备重启中${Reset}"
-    # 重新加载
-    systemctl reload mihomo
     # 重启服务
     if systemctl restart mihomo; then
         echo -e "${Green}mihomo 重启命令已发出${Reset}"
