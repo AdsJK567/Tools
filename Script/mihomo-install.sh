@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载、修改配置等
-#!date = 2024-09-07 08:40
+#!date = 2024-09-11 20:00
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -134,6 +134,8 @@ Start() {
         Start_Main
     fi
     echo -e "${Green}mihomo 准备启动中${Reset}"
+    # 重新加载 systemd
+    systemctl daemon-reload
     # 发送启动命令
     systemctl enable mihomo
     # 启动服务
@@ -189,6 +191,8 @@ Restart() {
     # 检查是否安装
     Check_install
     echo -e "${Green}mihomo 准备重启中${Reset}"
+    # 重新加载 systemd
+    systemctl daemon-reload
     # 重启服务
     if systemctl restart mihomo; then
         echo -e "${Green}mihomo 重启命令已发出${Reset}"
@@ -443,6 +447,7 @@ Configure() {
         read -p "请输入第 $i 个机场的名称：" airport_name
         
         proxy_providers="$proxy_providers
+  # 机场$i
   Airport_0$i:
     <<: *pr
     url: \"$airport_url\"
@@ -468,7 +473,7 @@ Configure() {
     echo -e "${Green}mihomo 配置已完成并保存到 ${CONFIG_FILE} 文件夹${Reset}"
     echo -e "${Green}mihomo 配置完成，正在启动中${Reset}"
     # 重新加载 systemd
-    # systemctl daemon-reload
+    systemctl daemon-reload
     # 立即启动 mihomo 服务
     systemctl start mihomo
     # # 检查 mihomo 服务状态
