@@ -443,7 +443,6 @@ Configure() {
         read -p "请输入第 $i 个机场的名称：" airport_name
         
         proxy_providers="$proxy_providers
-  # 机场$i
   Airport_0$i:
     <<: *pr
     url: \"$airport_url\"
