@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载、修改配置等
-#!date = 2024-09-12 10:30
+#!date = 2024-09-12 10:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.3.9"
+sh_ver="1.4.0"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -263,10 +263,21 @@ Update_Shell() {
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
                 wget -O mihomo-install.sh --no-check-certificate "$sh_ver_url"
                 chmod +x mihomo-install.sh
+                # 确定当前脚本的绝对路径
+                SCRIPT_PATH="/root/mihomo-install.sh"
+                # 将脚本移动到 /usr/local/bin
+                echo -e "${Green}将脚本移动到 /usr/local/bin${Reset}"
+                if [ -f "$SCRIPT_PATH" ]; then
+                    cp "$SCRIPT_PATH" /usr/local/bin/mihomo
+                    chmod +x /usr/local/bin/mihomo
+                else
+                    echo -e "${Red}当前脚本文件不存在: $SCRIPT_PATH${Reset}"
+                    exit 1
+                fi
                 echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
                 echo -e "5 秒后执行新脚本"
                 sleep 5s
-                bash mihomo-install.sh
+                bash /usr/local/bin/mihomo
                 break
                 ;;
             [Nn]* )
@@ -494,7 +505,7 @@ Configure() {
     # 调用函数获取
     GetLocal_ip
     # 引导语
-    echo -e "恭喜你，你的 mihomo 已经配置完成，输入 mihomo 就能启动面板"
+    echo -e "恭喜你，你的 mihomo 已经配置完成 输入 mihomo 就能启动面板"
     echo -e "使用 ${Green}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
     # 返回主菜单
     Start_Main
