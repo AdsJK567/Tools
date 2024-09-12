@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载、修改配置等
-#!date = 2024-09-12 10:50
+#!date = 2024-09-12 11:30
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,14 +17,14 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.4.3"
+sh_ver="1.4.4"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
 FILE="/root/mihomo/mihomo"
 WEB_FILE="/root/mihomo/ui"
 SYSCTL_FILE="/etc/sysctl.conf"
-SCRIPT_PATH="/root/mihomo-install.sh"
+SCRIPT_FILE="/root/mihomo-install.sh"
 CONFIG_FILE="/root/mihomo/config.yaml"
 VERSION_FILE="/root/mihomo/version.txt"
 SYSTEM_FILE="/etc/systemd/system/mihomo.service"
@@ -247,7 +247,7 @@ Update_Shell() {
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     
     # 当前脚本版本号
-    sh_ver=$(grep 'sh_ver="' "$SCRIPT_PATH" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    sh_ver=$(grep 'sh_ver="' "$SCRIPT_FILE" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
 
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
@@ -264,11 +264,11 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O $SCRIPT_PATH --no-check-certificate "$sh_ver_url"
-                chmod +x $SCRIPT_PATH
+                wget -O $SCRIPT_FILE --no-check-certificate "$sh_ver_url"
+                chmod +x $SCRIPT_FILE
                 # 将脚本移动到 /usr/local/bin
-                if [ -f "$SCRIPT_PATH" ]; then
-                    cp $SCRIPT_PATH /usr/local/bin/mihomo
+                if [ -f "$SCRIPT_FILE" ]; then
+                    cp $SCRIPT_FILE /usr/local/bin/mihomo
                     chmod +x /usr/local/bin/mihomo
                     echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
                     echo -e "5 秒后执行新脚本"
@@ -276,7 +276,7 @@ Update_Shell() {
                     bash /usr/local/bin/mihomo
                     break
                 else
-                    echo -e "${Red}当前脚本文件不存在: $SCRIPT_PATH${Reset}"
+                    echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
                     exit 1
                 fi
                 ;;
@@ -347,11 +347,11 @@ Install() {
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green}mihomo 安装完成，开始配置${Reset}"
     # 将脚本移动到 /usr/local/bin
-    if [ -f "$SCRIPT_PATH" ]; then
-        cp "$SCRIPT_PATH" /usr/local/bin/mihomo
+    if [ -f "$SCRIPT_FILE" ]; then
+        cp "$SCRIPT_FILE" /usr/local/bin/mihomo
         chmod +x /usr/local/bin/mihomo
     else
-        echo -e "${Red}当前脚本文件不存在: $SCRIPT_PATH${Reset}"
+        echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
        exit 1
     fi
     # 开始配置 config 文件
