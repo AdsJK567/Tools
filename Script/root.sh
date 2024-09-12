@@ -25,30 +25,6 @@ Check_os() {
     fi
 }
 
-# 更新系统
-Update_System() {
-    Check_os
-    case "$OS" in
-        "debian" | "ubuntu" )
-            echo -e "${Green}正在更新系统${Reset}"
-            apt update && apt upgrade -y || { echo -e "${Red}系统更新失败${Reset}"; exit 1; }
-            ;;
-        "centos" )
-            echo -e "${Green}正在更新系统${Reset}"
-            yum update -y || { echo -e "${Red}系统更新失败${Reset}"; exit 1; }
-            ;;
-        "alpine" )
-            echo -e "${Green}正在更新系统${Reset}"
-            apk update && apk upgrade || { echo -e "${Red}系统更新失败${Reset}"; exit 1; }
-            ;;
-        * )
-            echo -e "${Red}不支持的操作系统${Reset}"
-            exit 1
-            ;;
-    esac
-    echo -e "${Green}系统更新完成${Reset}"
-}
-
 # 配置 SSH 以允许 root 登录
 Configure_SSH() {
     Check_os
