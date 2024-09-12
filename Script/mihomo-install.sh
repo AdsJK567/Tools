@@ -268,7 +268,7 @@ Update_Shell() {
                 chmod +x $SCRIPT_FILE
                 # 将脚本移动到 /usr/local/bin
                 if [ -f "$SCRIPT_FILE" ]; then
-                    mv $SCRIPT_FILE /usr/local/bin/mihomo
+                    cp $SCRIPT_FILE /usr/local/bin/mihomo
                     chmod +x /usr/local/bin/mihomo
                     echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
                     echo -e "5 秒后执行新脚本"
@@ -348,7 +348,7 @@ Install() {
     echo -e "${Green}mihomo 安装完成，开始配置${Reset}"
     # 将脚本移动到 /usr/local/bin
     if [ -f "$SCRIPT_FILE" ]; then
-        mv "$SCRIPT_FILE" /usr/local/bin/mihomo
+        cp "$SCRIPT_FILE" /usr/local/bin/mihomo
         chmod +x /usr/local/bin/mihomo
     else
         echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
