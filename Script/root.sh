@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = 开启 ROOT 一键脚本
 #!desc = 支持，debian、ubuntu、centos、alpine
-#!date = 2024-09-12 11:30
+#!date = 2024-09-12 17:00
 #!author = AdsJK567 ChatGPT
 
 # 颜色设置
@@ -30,23 +30,35 @@ Configure_SSH() {
     Check_os
     case "$OS" in
         "debian" | "ubuntu" )
+            # 更新系统并安装 SSH 服务
+            apt-get update -y
+            apt-get install -y openssh-server
             # 允许 root 用户通过 SSH 登录
             echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config > /dev/null
             # 重新启动 SSH 服务
             systemctl restart ssh || { echo -e "${Red}重新启动 SSH 服务失败${Reset}"; exit 1; }
             ;;
+
         "centos" )
+            # 更新系统并安装 SSH 服务
+            yum update -y
+            yum install -y openssh-server
             # 允许 root 用户通过 SSH 登录
             echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config > /dev/null
             # 重新启动 SSH 服务
             systemctl restart sshd || { echo -e "${Red}重新启动 SSH 服务失败${Reset}"; exit 1; }
             ;;
+
         "alpine" )
+            # 更新系统并安装 SSH 服务
+            apk update
+            apk add openssh
             # 允许 root 用户通过 SSH 登录
-            echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config > /dev/null
+            echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
             # 重新启动 SSH 服务
             /etc/init.d/sshd restart || { echo -e "${Red}重新启动 SSH 服务失败${Reset}"; exit 1; }
             ;;
+
         * )
             echo -e "${Red}不支持的操作系统${Reset}"
             exit 1
@@ -55,5 +67,5 @@ Configure_SSH() {
     echo -e "${Green}SSH 配置已更新，服务已重新启动${Reset}"
 }
 
-# 执行系统更新和配置
+# 执行配置
 Configure_SSH
