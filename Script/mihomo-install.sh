@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.4.1"
+sh_ver="1.4.2"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -267,7 +267,6 @@ Update_Shell() {
                 wget -O /tmp/mihomo-install.sh --no-check-certificate "$sh_ver_url"
                 chmod +x /tmp/mihomo-install.sh
                 # 将脚本移动到 /usr/local/bin
-                echo -e "${Green}将脚本移动到 /usr/local/bin${Reset}"
                 if [ -f "$SCRIPT_PATH" ]; then
                     cp /tmp/mihomo-install.sh /usr/local/bin/mihomo
                     chmod +x /usr/local/bin/mihomo
@@ -348,7 +347,6 @@ Install() {
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green}mihomo 安装完成，开始配置${Reset}"
     # 将脚本移动到 /usr/local/bin
-    echo -e "${Green}将脚本移动到 /usr/local/bin${Reset}"
     if [ -f "$SCRIPT_PATH" ]; then
         cp "$SCRIPT_PATH" /usr/local/bin/mihomo
         chmod +x /usr/local/bin/mihomo
