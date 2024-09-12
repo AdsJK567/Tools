@@ -56,5 +56,4 @@ Configure_SSH() {
 }
 
 # 执行系统更新和配置
-Update_System
 Configure_SSH
