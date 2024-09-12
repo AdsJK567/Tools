@@ -17,7 +17,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.4.4"
+sh_ver="1.4.6"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -502,8 +502,9 @@ Configure() {
     # 调用函数获取
     GetLocal_ip
     # 引导语
-    echo -e "恭喜你，你的 mihomo 已经配置完成 输入 mihomo 就能启动面板"
-    echo -e "使用 ${Green}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
+    echo -e "${Green}恭喜你，你的 mihomo 已经配置完成${Green}"
+    echo -e "${Red}输入 mihomo 就能启动面板${Green}"
+    echo -e "使用 ${Red}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
     # 返回主菜单
     Start_Main
 }
