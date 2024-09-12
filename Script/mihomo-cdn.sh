@@ -1,7 +1,7 @@
 #!/bin/bash
 #!name = mihomo 一键脚本 Beta 加速版
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-08-29 17:30
+#!date = 2024-09-12 11:30
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -17,13 +17,14 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.8"
+sh_ver="1.0.9"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
 FILE="/root/mihomo/mihomo"
 WEB_FILE="/root/mihomo/ui"
 SYSCTL_FILE="/etc/sysctl.conf"
+SCRIPT_FILE="/root/mihomo-install.sh"
 CONFIG_FILE="/root/mihomo/config.yaml"
 VERSION_FILE="/root/mihomo/version.txt"
 SYSTEM_FILE="/etc/systemd/system/mihomo.service"
@@ -125,7 +126,7 @@ Check_ip_forward() {
     echo -e "${Green}IP 转发开启成功${Reset}"
 }
 
-# 启动服务
+# 启动
 Start() {
     # 检查是否安装
     Check_install
@@ -134,7 +135,9 @@ Start() {
         Start_Main
     fi
     echo -e "${Green}mihomo 准备启动中${Reset}"
-    # 重新加载
+    # 重新加载 systemd
+    systemctl daemon-reload
+    # 发送启动命令
     systemctl enable mihomo
     # 启动服务
     if systemctl start mihomo; then
@@ -155,7 +158,7 @@ Start() {
     Start_Main
 }
 
-# 停止服务
+# 停止
 Stop() {
     # 检查是否安装
     Check_install
@@ -184,11 +187,13 @@ Stop() {
     Start_Main
 }
 
-# 重启服务
+# 重启
 Restart() {
     # 检查是否安装
     Check_install
     echo -e "${Green}mihomo 准备重启中${Reset}"
+    # 重新加载 systemd
+    systemctl daemon-reload
     # 重启服务
     if systemctl restart mihomo; then
         echo -e "${Green}mihomo 重启命令已发出${Reset}"
@@ -241,29 +246,38 @@ Update_Shell() {
     # 获取最新版本号
     sh_ver_url="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-cdn.sh"
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
-    # 最新版本无需更新
+    # 当前脚本版本号
+    sh_ver=$(grep 'sh_ver="' "$SCRIPT_FILE" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
         echo -e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
         echo -e "${Green}当前已是最新版本，无需更新${Reset}"
         Start_Main
+        exit 0
     fi
     echo -e "${Green}检查到已有新版本${Reset}"
     echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
     echo -e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
-    # 开始更新
     while true; do
         read -p "是否升级到最新版本？(y/n)：" confirm
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O mihomo-cdn.sh --no-check-certificate "$sh_ver_url"
-                chmod +x mihomo-cdn.sh
-                echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
-                echo -e "5 秒后执行新脚本"
-                sleep 5s
-                bash mihomo-cdn.sh
-                break
+                wget -O $SCRIPT_FILE --no-check-certificate "$sh_ver_url"
+                chmod +x $SCRIPT_FILE
+                # 将脚本移动到 /usr/local/bin
+                if [ -f "$SCRIPT_FILE" ]; then
+                    cp $SCRIPT_FILE /usr/local/bin/mihomo
+                    chmod +x /usr/local/bin/mihomo
+                    echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
+                    echo -e "5 秒后执行新脚本"
+                    sleep 5s
+                    bash /usr/local/bin/mihomo
+                    break
+                else
+                    echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
+                    exit 1
+                fi
                 ;;
             [Nn]* )
                 echo -e "${Red}更新已取消 ${Reset}"
@@ -331,6 +345,14 @@ Install() {
     SERVICE_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green}mihomo 安装完成，开始配置${Reset}"
+    # 将脚本移动到 /usr/local/bin
+    if [ -f "$SCRIPT_FILE" ]; then
+        cp "$SCRIPT_FILE" /usr/local/bin/mihomo
+        chmod +x /usr/local/bin/mihomo
+    else
+        echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
+       exit 1
+    fi
     # 开始配置 config 文件
     Configure
 }
@@ -481,6 +503,7 @@ Configure() {
     GetLocal_ip
     # 引导语
     echo -e "恭喜你，你的 mihomo 已经配置完成"
+    echo -e "输入 mihomo 查看菜单"
     echo -e "使用 ${Green}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
     # 返回主菜单
     Start_Main
