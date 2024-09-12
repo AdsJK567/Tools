@@ -17,13 +17,14 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.4.0"
+sh_ver="1.4.1"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
 FILE="/root/mihomo/mihomo"
 WEB_FILE="/root/mihomo/ui"
 SYSCTL_FILE="/etc/sysctl.conf"
+SCRIPT_PATH="/root/mihomo-install.sh"
 CONFIG_FILE="/root/mihomo/config.yaml"
 VERSION_FILE="/root/mihomo/version.txt"
 SYSTEM_FILE="/etc/systemd/system/mihomo.service"
@@ -240,45 +241,45 @@ Uninstall() {
 
 # 更新脚本
 Update_Shell() {
-    # 获取当前版本
     echo -e "${Green}开始检查是否有更新${Reset}"
     # 获取最新版本号
     sh_ver_url="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh"
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
-    # 最新版本无需更新
+    
+    # 当前脚本版本号
+    sh_ver=$(grep 'sh_ver="' "$SCRIPT_PATH" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
         echo -e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
         echo -e "${Green}当前已是最新版本，无需更新${Reset}"
         Start_Main
+        exit 0
     fi
     echo -e "${Green}检查到已有新版本${Reset}"
     echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
     echo -e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
-    # 开始更新
     while true; do
         read -p "是否升级到最新版本？(y/n)：" confirm
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O mihomo-install.sh --no-check-certificate "$sh_ver_url"
-                chmod +x mihomo-install.sh
-                # 确定当前脚本的绝对路径
-                SCRIPT_PATH="/root/mihomo-install.sh"
+                wget -O /tmp/mihomo-install.sh --no-check-certificate "$sh_ver_url"
+                chmod +x /tmp/mihomo-install.sh
                 # 将脚本移动到 /usr/local/bin
                 echo -e "${Green}将脚本移动到 /usr/local/bin${Reset}"
                 if [ -f "$SCRIPT_PATH" ]; then
-                    cp "$SCRIPT_PATH" /usr/local/bin/mihomo
+                    cp /tmp/mihomo-install.sh /usr/local/bin/mihomo
                     chmod +x /usr/local/bin/mihomo
+                    echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
+                    echo -e "5 秒后执行新脚本"
+                    sleep 5s
+                    bash /usr/local/bin/mihomo
+                    break
                 else
                     echo -e "${Red}当前脚本文件不存在: $SCRIPT_PATH${Reset}"
                     exit 1
                 fi
-                echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
-                echo -e "5 秒后执行新脚本"
-                sleep 5s
-                bash /usr/local/bin/mihomo
-                break
                 ;;
             [Nn]* )
                 echo -e "${Red}更新已取消 ${Reset}"
@@ -346,8 +347,6 @@ Install() {
     SERVICE_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green}mihomo 安装完成，开始配置${Reset}"
-    # 确定当前脚本的绝对路径
-    SCRIPT_PATH="/root/mihomo-install.sh"
     # 将脚本移动到 /usr/local/bin
     echo -e "${Green}将脚本移动到 /usr/local/bin${Reset}"
     if [ -f "$SCRIPT_PATH" ]; then
