@@ -24,7 +24,6 @@ FOLDERS="/root/mihomo"
 FILE="/root/mihomo/mihomo"
 WEB_FILE="/root/mihomo/ui"
 SYSCTL_FILE="/etc/sysctl.conf"
-SCRIPT_FILE="/root/mihomo-install.sh"
 CONFIG_FILE="/root/mihomo/config.yaml"
 VERSION_FILE="/root/mihomo/version.txt"
 SYSTEM_FILE="/etc/systemd/system/mihomo.service"
@@ -135,10 +134,6 @@ Start() {
         Start_Main
     fi
     echo -e "${Green}mihomo 准备启动中${Reset}"
-    # 重新加载 systemd
-    systemctl daemon-reload
-    # 发送启动命令
-    systemctl enable mihomo
     # 启动服务
     if systemctl start mihomo; then
         echo -e "${Green}mihomo 启动命令已发出${Reset}"
@@ -192,8 +187,6 @@ Restart() {
     # 检查是否安装
     Check_install
     echo -e "${Green}mihomo 准备重启中${Reset}"
-    # 重新加载 systemd
-    systemctl daemon-reload
     # 重启服务
     if systemctl restart mihomo; then
         echo -e "${Green}mihomo 重启命令已发出${Reset}"
@@ -244,40 +237,31 @@ Update_Shell() {
     # 获取当前版本
     echo -e "${Green}开始检查是否有更新${Reset}"
     # 获取最新版本号
-    sh_ver_url="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-cdn.sh"
+    sh_ver_url="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh"
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
-    # 当前脚本版本号
-    sh_ver=$(grep 'sh_ver="' "$SCRIPT_FILE" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    # 最新版本无需更新
     if [ "$sh_ver" == "$sh_new_ver" ]; then
         echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
         echo -e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
         echo -e "${Green}当前已是最新版本，无需更新${Reset}"
         Start_Main
-        exit 0
     fi
     echo -e "${Green}检查到已有新版本${Reset}"
     echo -e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
     echo -e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
+    # 开始更新
     while true; do
         read -p "是否升级到最新版本？(y/n)：" confirm
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
-                wget -O $SCRIPT_FILE --no-check-certificate "$sh_ver_url"
-                chmod +x $SCRIPT_FILE
-                # 将脚本移动到 /usr/local/bin
-                if [ -f "$SCRIPT_FILE" ]; then
-                    cp $SCRIPT_FILE /usr/local/bin/mihomo
-                    chmod +x /usr/local/bin/mihomo
-                    echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
-                    echo -e "5 秒后执行新脚本"
-                    sleep 5s
-                    bash /usr/local/bin/mihomo
-                    break
-                else
-                    echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
-                    exit 1
-                fi
+                wget -O mihomo-install.sh --no-check-certificate "$sh_ver_url"
+                chmod +x mihomo-install.sh
+                echo -e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
+                echo -e "5 秒后执行新脚本"
+                sleep 5s
+                bash mihomo-install.sh
+                break
                 ;;
             [Nn]* )
                 echo -e "${Red}更新已取消 ${Reset}"
@@ -291,7 +275,7 @@ Update_Shell() {
     Start_Main
 }
 
-# 安装服务
+# 安装
 Install() {
     # 检查是否安装 
     if [ -f "$FILE" ]; then
@@ -299,9 +283,9 @@ Install() {
         Start_Main
     fi
     # 更新系统
-    apt update && apt dist-upgrade -y
+    apt-get update && apt-get dist-upgrade -y
     # 安装插件
-    apt-get install jq unzip curl git wget vim dnsutils openssl coreutils grep gawk iptables -y
+    apt-get install unzip git wget vim dnsutils coreutils grep gawk iptables -y
     # 创建文件夹
     mkdir -p $FOLDERS && cd $FOLDERS || { echo -e "${Red}创建或进入 $FOLDERS 目录失败${Reset}"; exit 1; }
     # 获取架构
@@ -345,14 +329,6 @@ Install() {
     SERVICE_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo -e "${Green}mihomo 安装完成，开始配置${Reset}"
-    # 将脚本移动到 /usr/local/bin
-    if [ -f "$SCRIPT_FILE" ]; then
-        cp "$SCRIPT_FILE" /usr/local/bin/mihomo
-        chmod +x /usr/local/bin/mihomo
-    else
-        echo -e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
-       exit 1
-    fi
     # 开始配置 config 文件
     Configure
 }
@@ -410,9 +386,9 @@ Update() {
                 chmod 755 mihomo
                 # 更新版本信息
                 echo "$LATEST_VERSION" > "$VERSION_FILE"
-                # 重新加载 systemd
+                # 重新加载
                 systemctl daemon-reload
-                # 重启 mihomo 服务
+                # 重启
                 systemctl restart mihomo
                 echo -e "更新完成，当前版本已更新为：[ ${Green}${LATEST_VERSION}${Reset} ]"
                 # 检查并显示服务状态
@@ -425,11 +401,11 @@ Update() {
                 Start_Main
                 ;;
             [Nn]* )
-                echo -e "${Red}更新已取消 ${Reset}"
+                echo -e "${Red}更新已取消${Reset}"
                 Start_Main
                 ;;
             * )
-                echo -e "${Red}无效的输入，请输入 y 或 n ${Reset}"
+                echo -e "${Red}无效的输入，请输入 y 或 n${Reset}"
                 ;;
         esac
     done
@@ -473,9 +449,9 @@ Configure() {
       additional-prefix: \"[$airport_name]\""
     done
     # 修改配置文件
-    echo -e "${Green}修改配置文件${Reset}"
+    echo -e "${Green}正在修改配置文件${Reset}"
     # 写入配置文件
-    echo -e "${Green}写入配置文件${Reset}"
+    echo -e "${Green}开始写入配置文件${Reset}"
     # 使用 awk 将 proxy-providers 插入到指定位置
     awk -v providers="$proxy_providers" '
     /^# 机场订阅/ {
@@ -496,15 +472,14 @@ Configure() {
     systemctl start mihomo
     # # 检查 mihomo 服务状态
     # systemctl status mihomo
-    echo -e "${Green}已设置开机自启${Reset}"
     # 设置开机启动
     systemctl enable mihomo
+    echo -e "${Green}已设置开机自启动${Reset}"
     # 调用函数获取
     GetLocal_ip
     # 引导语
-    echo -e "${Green}恭喜你，你的 mihomo 已经配置完成${Green}"
-    echo -e "${Red}输入 mihomo 就能启动面板${Green}"
-    echo -e "使用 ${Red}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
+    echo -e "恭喜你，你的 mihomo 已经配置完成"
+    echo -e "使用 ${Green}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
     # 返回主菜单
     Start_Main
 }
@@ -516,19 +491,20 @@ Main() {
     echo -e "${Green}欢迎使用 mihomo 一键脚本 Beta 加速版${Reset}"
     echo -e "${Green}作者：${Reset}${Red}AdsJK567${Reset}"
     echo -e "${Green}启用国内 CDN 加速${Reset}"
+    echo -e "${Green}选项3，可以修改你的机场订阅链接${Reset}"
     echo -e "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
     echo "================================="
-    echo -e "${Green}0${Reset}、更新脚本"
+    echo -e "${Green} 0${Reset}、更新脚本"
+    echo -e "${Green} 8${Reset}、退出脚本"
     echo "---------------------------------"
-    echo -e "${Green}1${Reset}、安装 mihomo"
-    echo -e "${Green}2${Reset}、更新 mihomo"
-    echo -e "${Green}3${Reset}、配置 mihomo"
-    echo -e "${Green}4${Reset}、卸载 mihomo"
+    echo -e "${Green} 1${Reset}、安装 mihomo"
+    echo -e "${Green} 2${Reset}、更新 mihomo"
+    echo -e "${Green} 3${Reset}、卸载 mihomo"
+    echo -e "${Green} 4${Reset}、配置 mihomo"
     echo "---------------------------------"
-    echo -e "${Green}5${Reset}、启动 mihomo"
-    echo -e "${Green}6${Reset}、停止 mihomo"
-    echo -e "${Green}7${Reset}、重启 mihomo"
-    echo -e "${Green}8${Reset}、退出脚本"
+    echo -e "${Green} 5${Reset}、启动 mihomo"
+    echo -e "${Green} 6${Reset}、停止 mihomo"
+    echo -e "${Green} 7${Reset}、重启 mihomo"
     echo "================================="
     Show_Status
     echo "================================="
@@ -536,8 +512,8 @@ Main() {
     case "$num" in
         1) Check_ip_forward; Install ;;
         2) Update ;;
-        3) Configure ;;
-        4) Uninstall ;;
+        3) Uninstall ;;
+        4) Configure ;;
         5) Start ;;
         6) Stop ;;
         7) Restart ;;
