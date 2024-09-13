@@ -46,7 +46,7 @@ Start_Main() {
 # 检查是否安装
 Check_install(){
     if [ ! -f "$FILE" ]; then
-        echo "${Red}mihomo 未安装${Reset}"
+        echo - e "${Red}mihomo 未安装${Reset}"
         Start_Main
     fi
 }
@@ -65,7 +65,7 @@ Get_current_version() {
     if [ -f "$VERSION_FILE" ]; then
         cat "$VERSION_FILE"
     else
-        echo "mihomo 未安装"
+        echo - e "mihomo 未安装"
     fi
 }
 
@@ -101,16 +101,16 @@ Show_Status() {
                 fi
                 ;;
             *)
-                echo "${Red}不支持的操作系统${Reset}"
+                echo - e "${Red}不支持的操作系统${Reset}"
                 exit 1
                 ;;
         esac
     fi
     # 显示输出效果
-    echo "脚本版本：${Green}${sh_ver}${Reset}"
-    echo "安装状态：${status}"
-    echo "运行状态：${run_status}"
-    echo "开机自启：${auto_start}"
+    echo - e "脚本版本：${Green}${sh_ver}${Reset}"
+    echo - e "安装状态：${status}"
+    echo - e "运行状态：${run_status}"
+    echo - e "开机自启：${auto_start}"
 }
 
 # 检查操作系统
@@ -124,7 +124,7 @@ Check_os() {
     elif [ -f /etc/alpine-release ]; then
         OS="alpine"
     else
-        echo "${Red}不支持的操作系统${Reset}"
+        echo - e "${Red}不支持的操作系统${Reset}"
         exit 1
     fi
 }
@@ -138,7 +138,7 @@ Get_the_schema(){
         'aarch64' | 'arm64') ARCH='arm64';;
         'armv7l')   ARCH='armv7';;
         's390x')    ARCH='s390x';;
-        *)          echo "${Red}不支持的架构：${ARCH_RAW}${Reset}"; exit 1;;
+        *)          echo - e "${Red}不支持的架构：${ARCH_RAW}${Reset}"; exit 1;;
     esac
 }
 
@@ -152,10 +152,10 @@ Check_ip_forward() {
         return
     fi
     # 如果设置不存在，则添加并执行 sysctl -p
-    echo "$IPV4_FORWARD" >> "$SYSCTL_FILE"
+    echo - e "$IPV4_FORWARD" >> "$SYSCTL_FILE"
     # 立即生效
     sysctl -p
-    echo "${Green}IP 转发开启成功${Reset}"
+    echo - e "${Green}IP 转发开启成功${Reset}"
 }
 
 # 启动服务
@@ -167,52 +167,52 @@ Start() {
     case "$OS" in
         "debian" | "ubuntu" | "centos")
             if systemctl is-active --quiet mihomo; then
-                echo "${Green}mihomo 正在运行中${Reset}"
+                echo - e "${Green}mihomo 正在运行中${Reset}"
                 Start_Main
             fi
-            echo "${Green}mihomo 准备启动中${Reset}"
+            echo - e "${Green}mihomo 准备启动中${Reset}"
             # 启动服务
             if systemctl start mihomo; then
-                echo "${Green}mihomo 启动命令已发出${Reset}"
+                echo - e "${Green}mihomo 启动命令已发出${Reset}"
             else
-                echo "${Red}mihomo 启动失败${Reset}"
+                echo - e "${Red}mihomo 启动失败${Reset}"
                 exit 1
             fi
             # 等待服务启动
             sleep 3s
             # 检查服务状态
             if systemctl is-active --quiet mihomo; then
-                echo "${Green}mihomo 启动成功${Reset}"
+                echo - e "${Green}mihomo 启动成功${Reset}"
             else
-                echo "${Red}mihomo 启动失败${Reset}"
+                echo - e "${Red}mihomo 启动失败${Reset}"
                 exit 1
             fi
             ;;
         "alpine")
             if rc-service mihomo status > /dev/null 2>&1; then
-                echo "${Green}mihomo 正在运行中${Reset}"
+                echo - e "${Green}mihomo 正在运行中${Reset}"
                 Start_Main
             fi
-            echo "${Green}mihomo 准备启动中${Reset}"
+            echo - e "${Green}mihomo 准备启动中${Reset}"
             # 启动服务
             if rc-service mihomo start; then
-                echo "${Green}mihomo 启动命令已发出${Reset}"
+                echo - e "${Green}mihomo 启动命令已发出${Reset}"
             else
-                echo "${Red}mihomo 启动失败${Reset}"
+                echo - e "${Red}mihomo 启动失败${Reset}"
                 exit 1
             fi
             # 等待服务启动
             sleep 3s
             # 检查服务状态
             if rc-service mihomo status > /dev/null 2>&1; then
-                echo "${Green}mihomo 启动成功${Reset}"
+                echo - e "${Green}mihomo 启动成功${Reset}"
             else
-                echo "${Red}mihomo 启动失败${Reset}"
+                echo - e "${Red}mihomo 启动失败${Reset}"
                 exit 1
             fi
             ;;
         *)
-            echo "${Red}不支持的操作系统${Reset}"
+            echo - e "${Red}不支持的操作系统${Reset}"
             exit 1
             ;;
     esac
@@ -230,53 +230,53 @@ Stop() {
         "debian" | "ubuntu" | "centos")
             # 检查是否运行
             if ! systemctl is-active --quiet mihomo; then
-                echo "${Green}mihomo 已经停止${Reset}"
+                echo - e "${Green}mihomo 已经停止${Reset}"
                 exit 0
             fi
-            echo "${Green}mihomo 准备停止中${Reset}"
+            echo - e "${Green}mihomo 准备停止中${Reset}"
             # 停止服务
             if systemctl stop mihomo; then
-                echo "${Green}mihomo 停止命令已发出${Reset}"
+                echo - e "${Green}mihomo 停止命令已发出${Reset}"
             else
-                echo "${Red}mihomo 停止失败${Reset}"
+                echo - e "${Red}mihomo 停止失败${Reset}"
                 exit 1
             fi
             # 等待服务停止
             sleep 3s
             # 检查服务状态
             if systemctl is-active --quiet mihomo; then
-                echo "${Red}mihomo 停止失败${Reset}"
+                echo - e "${Red}mihomo 停止失败${Reset}"
                 exit 1
             else
-                echo "${Green}mihomo 停止成功${Reset}"
+                echo - e "${Green}mihomo 停止成功${Reset}"
             fi
             ;;
         "alpine")
             # 检查是否运行
             if ! rc-service mihomo status > /dev/null 2>&1; then
-                echo "${Green}mihomo 已经停止${Reset}"
+                echo - e "${Green}mihomo 已经停止${Reset}"
                 exit 0
             fi
-            echo "${Green}mihomo 准备停止中${Reset}"
+            echo - e "${Green}mihomo 准备停止中${Reset}"
             # 停止服务
             if rc-service mihomo stop; then
-                echo "${Green}mihomo 停止命令已发出${Reset}"
+                echo - e "${Green}mihomo 停止命令已发出${Reset}"
             else
-                echo "${Red}mihomo 停止失败${Reset}"
+                echo - e "${Red}mihomo 停止失败${Reset}"
                 exit 1
             fi
             # 等待服务停止
             sleep 3s
             # 检查服务状态
             if rc-service mihomo status > /dev/null 2>&1; then
-                echo "${Red}mihomo 停止失败${Reset}"
+                echo - e "${Red}mihomo 停止失败${Reset}"
                 exit 1
             else
-                echo "${Green}mihomo 停止成功${Reset}"
+                echo - e "${Green}mihomo 停止成功${Reset}"
             fi
             ;;
         *)
-            echo "${Red}不支持的操作系统${Reset}"
+            echo - e "${Red}不支持的操作系统${Reset}"
             exit 1
             ;;
     esac
@@ -292,45 +292,45 @@ Restart() {
     Check_os
     case "$OS" in
         "debian" | "ubuntu" | "centos")
-            echo "${Green}mihomo 准备重启中${Reset}"
+            echo - e "${Green}mihomo 准备重启中${Reset}"
             # 重启服务
             if systemctl restart mihomo; then
-                echo "${Green}mihomo 重启命令已发出${Reset}"
+                echo - e "${Green}mihomo 重启命令已发出${Reset}"
             else
-                echo "${Red}mihomo 重启失败${Reset}"
+                echo - e "${Red}mihomo 重启失败${Reset}"
                 exit 1
             fi
             # 等待服务重启
             sleep 3s
             # 检查服务状态
             if systemctl is-active --quiet mihomo; then
-                echo "${Green}mihomo 重启成功${Reset}"
+                echo - e "${Green}mihomo 重启成功${Reset}"
             else
-                echo "${Red}mihomo 启动失败${Reset}"
+                echo - e "${Red}mihomo 启动失败${Reset}"
                 exit 1
             fi
             ;;
         "alpine")
-            echo "${Green}mihomo 准备重启中${Reset}"
+            echo - e "${Green}mihomo 准备重启中${Reset}"
             # 重启服务
             if rc-service mihomo restart; then
-                echo "${Green}mihomo 重启命令已发出${Reset}"
+                echo - e "${Green}mihomo 重启命令已发出${Reset}"
             else
-                echo "${Red}mihomo 重启失败${Reset}"
+                echo - e "${Red}mihomo 重启失败${Reset}"
                 exit 1
             fi
             # 等待服务重启
             sleep 3s
             # 检查服务状态
             if rc-service mihomo status > /dev/null 2>&1; then
-                echo "${Green}mihomo 重启成功${Reset}"
+                echo - e "${Green}mihomo 重启成功${Reset}"
             else
-                echo "${Red}mihomo 启动失败${Reset}"
+                echo - e "${Red}mihomo 启动失败${Reset}"
                 exit 1
             fi
             ;;
         *)
-            echo "${Red}不支持的操作系统${Reset}"
+            echo - e "${Red}不支持的操作系统${Reset}"
             exit 1
             ;;
     esac
@@ -344,32 +344,32 @@ Uninstall() {
     Check_install
     # 获取当前系统
     Check_os
-    echo "${Green}mihomo 开始卸载${Reset}"
+    echo - e "${Green}mihomo 开始卸载${Reset}"
     case "$OS" in
         "debian" | "ubuntu" | "centos")
-            echo "${Green}mihomo 卸载命令已发出${Reset}"
+            echo - e "${Green}mihomo 卸载命令已发出${Reset}"
             # 停止服务
-            systemctl stop mihomo.service 2>/dev/null || { echo "${Red}停止 mihomo 服务失败${Reset}"; exit 1; }
-            systemctl disable mihomo.service 2>/dev/null || { echo "${Red}禁用 mihomo 服务失败${Reset}"; exit 1; }
+            systemctl stop mihomo.service 2>/dev/null || { echo - e "${Red}停止 mihomo 服务失败${Reset}"; exit 1; }
+            systemctl disable mihomo.service 2>/dev/null || { echo - e "${Red}禁用 mihomo 服务失败${Reset}"; exit 1; }
             # 删除服务文件
-            rm -f "$SYSTEM_FILE" || { echo "${Red}删除服务文件失败${Reset}"; exit 1; }
+            rm -f "$SYSTEM_FILE" || { echo - e "${Red}删除服务文件失败${Reset}"; exit 1; }
             # 删除相关文件夹
-            rm -rf "$FOLDERS" || { echo "${Red}删除相关文件夹失败${Reset}"; exit 1; }
+            rm -rf "$FOLDERS" || { echo - e "${Red}删除相关文件夹失败${Reset}"; exit 1; }
             # 重新加载 systemd
-            systemctl daemon-reload || { echo "${Red}重新加载 systemd 配置失败${Reset}"; exit 1; }
+            systemctl daemon-reload || { echo - e "${Red}重新加载 systemd 配置失败${Reset}"; exit 1; }
             ;;
         "alpine")
-            echo "${Green}mihomo 卸载命令已发出${Reset}"
+            echo - e "${Green}mihomo 卸载命令已发出${Reset}"
             # 停止服务
-            rc-service mihomo stop 2>/dev/null || { echo "${Red}停止 mihomo 服务失败${Reset}"; exit 1; }
-            rc-update delete mihomo 2>/dev/null || { echo "${Red}禁用 mihomo 服务失败${Reset}"; exit 1; }
+            rc-service mihomo stop 2>/dev/null || { echo - e "${Red}停止 mihomo 服务失败${Reset}"; exit 1; }
+            rc-update delete mihomo 2>/dev/null || { echo - e "${Red}禁用 mihomo 服务失败${Reset}"; exit 1; }
             # 删除服务文件
-            rm -f "$SYSTEM_FILE" || { echo "${Red}删除服务文件失败${Reset}"; exit 1; }
+            rm -f "$SYSTEM_FILE" || { echo - e "${Red}删除服务文件失败${Reset}"; exit 1; }
             # 删除相关文件夹
-            rm -rf "$FOLDERS" || { echo "${Red}删除相关文件夹失败${Reset}"; exit 1; }
+            rm -rf "$FOLDERS" || { echo - e "${Red}删除相关文件夹失败${Reset}"; exit 1; }
             ;;
         *)
-            echo "${Red}不支持的操作系统${Reset}"
+            echo - e "${Red}不支持的操作系统${Reset}"
             exit 1
             ;;
     esac
@@ -377,36 +377,36 @@ Uninstall() {
     sleep 3s
     # 检查卸载是否成功
     if [ ! -f "$SYSTEM_FILE" ] && [ ! -d "$FOLDERS" ]; then
-        echo "${Green}mihomo 卸载完成${Reset}"
+        echo - e "${Green}mihomo 卸载完成${Reset}"
     else
-        echo "${Red}卸载过程中出现问题，请手动检查${Reset}"
+        echo - e "${Red}卸载过程中出现问题，请手动检查${Reset}"
     fi
     exit 0
 }
 
 # 更新脚本
 Update_Shell() {
-    echo "${Green}开始检查是否有更新${Reset}"
+    echo - e "${Green}开始检查是否有更新${Reset}"
     # 获取最新版本号
     sh_ver_url="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh"
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     # 当前脚本版本号
     sh_ver=$(grep 'sh_ver="' "$SCRIPT_FILE" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     if [ "$sh_ver" == "$sh_new_ver" ]; then
-        echo "当前版本：[ ${Green}${sh_ver}${Reset} ]"
-        echo "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
-        echo "${Green}当前已是最新版本，无需更新${Reset}"
+        echo - e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
+        echo - e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
+        echo - e "${Green}当前已是最新版本，无需更新${Reset}"
         Start_Main
         exit 0
     fi
-    echo "${Green}检查到已有新版本${Reset}"
-    echo "当前版本：[ ${Green}${sh_ver}${Reset} ]"
-    echo "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
+    echo - e "${Green}检查到已有新版本${Reset}"
+    echo - e "当前版本：[ ${Green}${sh_ver}${Reset} ]"
+    echo - e "最新版本：[ ${Green}${sh_new_ver}${Reset} ]"
     while true; do
         read -p "是否升级到最新版本？(y/n)：" confirm
         case $confirm in
             [Yy]* )
-                echo "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
+                echo - e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
                 wget -O $SCRIPT_FILE --no-check-certificate "$sh_ver_url"
                 chmod +x $SCRIPT_FILE
                 
@@ -417,12 +417,12 @@ Update_Shell() {
                         if [ -f "$SCRIPT_FILE" ]; then
                             cp $SCRIPT_FILE /usr/local/bin/mihomo
                             chmod +x /usr/local/bin/mihomo
-                            echo "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
-                            echo "5 秒后执行新脚本"
+                            echo - e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
+                            echo - e "5 秒后执行新脚本"
                             sleep 5s
                             bash /usr/local/bin/mihomo
                         else
-                            echo "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
+                            echo - e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
                             exit 1
                         fi
                         ;;
@@ -431,28 +431,28 @@ Update_Shell() {
                         if [ -f "$SCRIPT_FILE" ]; then
                             cp $SCRIPT_FILE /usr/local/bin/mihomo
                             chmod +x /usr/local/bin/mihomo
-                            echo "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
-                            echo "5 秒后执行新脚本"
+                            echo - e "更新完成，当前版本已更新为 ${Green}[ v${sh_new_ver} ]${Reset}"
+                            echo - e "5 秒后执行新脚本"
                             sleep 5s
                             /usr/local/bin/mihomo
                         else
-                            echo "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
+                            echo - e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
                             exit 1
                         fi
                         ;;
                     *)
-                        echo "${Red}不支持的操作系统${Reset}"
+                        echo - e "${Red}不支持的操作系统${Reset}"
                         exit 1
                         ;;
                 esac
                 break
                 ;;
             [Nn]* )
-                echo "${Red}更新已取消 ${Reset}"
+                echo - e "${Red}更新已取消 ${Reset}"
                 exit 1
                 ;;
             * )
-                echo "${Red}无效的输入，请输入 y 或 n ${Reset}"
+                echo - e "${Red}无效的输入，请输入 y 或 n ${Reset}"
                 ;;
         esac
     done
@@ -464,15 +464,15 @@ Update_Shell() {
 Install() {
     # 检查是否安装 
     if [ -f "$FILE" ]; then
-        echo "${Green}mihomo 已经安装${Reset}"
+        echo - e "${Green}mihomo 已经安装${Reset}"
         Start_Main
     fi
     # 获取系统
     Check_os
-    echo "当前系统：[ ${Green}${OS}${Reset} ]"
+    echo - e "当前系统：[ ${Green}${OS}${Reset} ]"
     # 获取架构
     Get_the_schema
-    echo "当前架构：[ ${Green}${ARCH_RAW}${Reset} ]"
+    echo - e "当前架构：[ ${Green}${ARCH_RAW}${Reset} ]"
     case "$OS" in
         "debian" | "ubuntu")
             # 更新系统
@@ -493,50 +493,58 @@ Install() {
             apk add jq unzip curl git wget vim bind-tools openssl coreutils grep gawk iptables
             ;;
         *)
-            echo "${Red}不支持的操作系统${Reset}"
+            echo - e "${Red}不支持的操作系统${Reset}"
             exit 1
             ;;
     esac
     # 创建文件夹
-    mkdir -p $FOLDERS && cd $FOLDERS || { echo "${Red}创建或进入 $FOLDERS 目录失败${Reset}"; exit 1; }
+    mkdir -p $FOLDERS && cd $FOLDERS || { echo - e "${Red}创建或进入 $FOLDERS 目录失败${Reset}"; exit 1; }
     # 获取版本信息
     VERSION_URL="https://github.com/MetaCubeX/mihomo/releases/download/Prerelease-Alpha/version.txt"
-    VERSION=$(curl -sSL "$VERSION_URL" || { echo "${Red}获取版本信息失败${Reset}"; exit 1; })
+    VERSION=$(curl -sSL "$VERSION_URL" || { echo - e "${Red}获取版本信息失败${Reset}"; exit 1; })
     # 构造文件名
     case "$ARCH" in
         'arm64' | 'armv7' | 's390x' | '386') FILENAME="mihomo-linux-${ARCH}-${VERSION}.gz";;
         'amd64') FILENAME="mihomo-linux-${ARCH}-compatible-${VERSION}.gz";;
-        *)       echo "不支持的架构：[ ${Red}${ARCH}${Reset} ]"; exit 1;;
+        *)       echo - e "不支持的架构：[ ${Red}${ARCH}${Reset} ]"; exit 1;;
     esac
     # 开始下载
     DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/Prerelease-Alpha/${FILENAME}"
-    echo "当前版本：[ ${Green}${VERSION}${Reset} ]"
-    wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo "${Red}下载失败${Reset}"; exit 1; }
-    echo "[ ${Green}${VERSION}${Reset} ] 下载完成，开始安装"
+    echo - e "当前版本：[ ${Green}${VERSION}${Reset} ]"
+    wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo - e "${Red}下载失败${Reset}"; exit 1; }
+    echo - e "[ ${Green}${VERSION}${Reset} ] 下载完成，开始安装"
     # 解压文件
-    gunzip "$FILENAME" || { echo "${Red}解压失败${Reset}"; exit 1; }
+    gunzip "$FILENAME" || { echo - e "${Red}解压失败${Reset}"; exit 1; }
     # 重命名
     if [ -f "mihomo-linux-${ARCH}-${VERSION}" ]; then
         mv "mihomo-linux-${ARCH}-${VERSION}" mihomo
     elif [ -f "mihomo-linux-${ARCH}-compatible-${VERSION}" ]; then
         mv "mihomo-linux-${ARCH}-compatible-${VERSION}" mihomo
     else
-        echo "${Red}找不到解压后的文件${Reset}"
+        echo - e "${Red}找不到解压后的文件${Reset}"
         exit 1
     fi
     # 授权
     chmod 755 mihomo
     # 记录版本信息
-    echo "$VERSION" > "$VERSION_FILE"
+    echo - e "$VERSION" > "$VERSION_FILE"
     # 下载 UI
-    echo "${Green}开始下载 mihomo 管理面板${Reset}"
+    echo - e "${Green}开始下载 mihomo 管理面板${Reset}"
     WEB_URL="https://github.com/metacubex/metacubexd.git"
     git clone "$WEB_URL" -b gh-pages "$WEB_FILE"
     # 下载系统配置文件
-    echo "${Green}开始下载 mihomo 的 Service 系统配置${Reset}"
+    echo - e "${Green}开始下载 mihomo 的 Service 系统配置${Reset}"
     SERVICE_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
-    echo "${Green}mihomo 安装完成，开始配置${Reset}"
+    echo - e "${Green}mihomo 安装完成，开始配置${Reset}"
+    # 将脚本移动到 /usr/local/bin
+    if [ -f "$SCRIPT_FILE" ]; then
+        cp "$SCRIPT_FILE" /usr/local/bin/mihomo
+        chmod +x /usr/local/bin/mihomo
+    else
+        echo - e "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
+       exit 1
+    fi
     # 开始配置 config 文件
     Configure
 }
@@ -545,24 +553,24 @@ Install() {
 Update() {
     # 检查是否安装
     Check_install
-    echo "${Green}开始检查是否有更新${Reset}"
+    echo - e "${Green}开始检查是否有更新${Reset}"
     cd $FOLDERS
     # 获取当前版本
     CURRENT_VERSION=$(Get_current_version)
     # 获取最新版本
     LATEST_VERSION_URL="https://github.com/MetaCubeX/mihomo/releases/download/Prerelease-Alpha/version.txt"
-    LATEST_VERSION=$(curl -sSL "$LATEST_VERSION_URL" || { echo "${Red}获取版本信息失败${Reset}"; exit 1; })
+    LATEST_VERSION=$(curl -sSL "$LATEST_VERSION_URL" || { echo - e "${Red}获取版本信息失败${Reset}"; exit 1; })
     # 开始更新
     if [ "$CURRENT_VERSION" == "$LATEST_VERSION" ]; then
-        echo "当前版本：[ ${Green}${CURRENT_VERSION}${Reset} ]"
-        echo "最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
-        echo "${Green}当前已是最新版本，无需更新${Reset}"
+        echo - e "当前版本：[ ${Green}${CURRENT_VERSION}${Reset} ]"
+        echo - e "最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
+        echo - e "${Green}当前已是最新版本，无需更新${Reset}"
         Start_Main
         exit 0
     fi
-    echo "${Green}检查到已有新版本${Reset}"
-    echo "当前版本：[ ${Green}${CURRENT_VERSION}${Reset} ]"
-    echo "最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
+    echo - e "${Green}检查到已有新版本${Reset}"
+    echo - e "当前版本：[ ${Green}${CURRENT_VERSION}${Reset} ]"
+    echo - e "最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
     while true; do
         read -p "是否升级到最新版本？(y/n)：" confirm
         case $confirm in
@@ -577,24 +585,24 @@ Update() {
                 esac
                 # 开始下载
                 DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/Prerelease-Alpha/${FILENAME}"
-                echo "开始下载最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
-                wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo "${Red}下载失败${Reset}"; exit 1; }
-                echo "[ ${Green}${LATEST_VERSION}${Reset} ] 下载完成，开始更新"
+                echo - e "开始下载最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
+                wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo - e "${Red}下载失败${Reset}"; exit 1; }
+                echo - e "[ ${Green}${LATEST_VERSION}${Reset} ] 下载完成，开始更新"
                 # 解压文件
-                gunzip "$FILENAME" || { echo "${Red}解压失败${Reset}"; exit 1; }
+                gunzip "$FILENAME" || { echo - e "${Red}解压失败${Reset}"; exit 1; }
                 # 重命名
                 if [ -f "mihomo-linux-${ARCH}-${LATEST_VERSION}" ]; then
                     mv "mihomo-linux-${ARCH}-${LATEST_VERSION}" mihomo
                 elif [ -f "mihomo-linux-${ARCH}-compatible-${LATEST_VERSION}" ]; then
                     mv "mihomo-linux-${ARCH}-compatible-${LATEST_VERSION}" mihomo
                 else
-                    echo "${Red}找不到下载后的文件${Reset}"
+                    echo - e "${Red}找不到下载后的文件${Reset}"
                     exit 1
                 fi
                 # 授权
                 chmod 755 mihomo
                 # 更新版本信息
-                echo "$LATEST_VERSION" > "$VERSION_FILE"
+                echo - e "$LATEST_VERSION" > "$VERSION_FILE"
                 # 重新加载和重启服务
                 case "$OS" in
                     "debian" | "ubuntu" | "centos")
@@ -606,26 +614,26 @@ Update() {
                         rc-service mihomo restart
                         ;;
                     *)
-                        echo "${Red}不支持的操作系统${Reset}"
+                        echo - e "${Red}不支持的操作系统${Reset}"
                         exit 1
                         ;;
                 esac
-                echo "更新完成，当前版本已更新为：[ ${Green}${LATEST_VERSION}${Reset} ]"
+                echo - e "更新完成，当前版本已更新为：[ ${Green}${LATEST_VERSION}${Reset} ]"
                 # 检查并显示服务状态
                 case "$OS" in
                     "debian" | "ubuntu" | "centos")
                         if systemctl is-active --quiet mihomo; then
-                            echo "当前状态：[ ${Green}运行中${Reset} ]"
+                            echo - e "当前状态：[ ${Green}运行中${Reset} ]"
                         else
-                            echo "当前状态：[ ${Red}未运行${Reset} ]"
+                            echo - e "当前状态：[ ${Red}未运行${Reset} ]"
                             Start_Main
                         fi
                         ;;
                     "alpine")
                         if rc-service mihomo status > /dev/null 2>&1; then
-                            echo "当前状态：[ ${Green}运行中${Reset} ]"
+                            echo - e "当前状态：[ ${Green}运行中${Reset} ]"
                         else
-                            echo "当前状态：[ ${Red}未运行${Reset} ]"
+                            echo - e "当前状态：[ ${Red}未运行${Reset} ]"
                             Start_Main
                         fi
                         ;;
@@ -633,11 +641,11 @@ Update() {
                 Start_Main
                 ;;
             [Nn]* )
-                echo "${Red}更新已取消${Reset}"
+                echo - e "${Red}更新已取消${Reset}"
                 Start_Main
                 ;;
             * )
-                echo "${Red}无效的输入，请输入 y 或 n${Reset}"
+                echo - e "${Red}无效的输入，请输入 y 或 n${Reset}"
                 ;;
         esac
     done
@@ -655,14 +663,14 @@ Configure() {
         read -p "请输入需要配置的机场数量（默认 1 个，最多 5 个）：" airport_count
         airport_count=${airport_count:-1}
         # 验证输入是否为 1 到 5 之间的正整数
-        if echo "$airport_count" | grep -E '^[0-9]+$' > /dev/null && [ "$airport_count" -ge 1 ] && [ "$airport_count" -le 5 ]; then
+        if echo - e "$airport_count" | grep -E '^[0-9]+$' > /dev/null && [ "$airport_count" -ge 1 ] && [ "$airport_count" -le 5 ]; then
             break
         else
-            echo "\033[31m无效的数量，请输入 1 到 5 之间的正整数。\033[0m"
+            echo - e "\033[31m无效的数量，请输入 1 到 5 之间的正整数。\033[0m"
         fi
     done
     # 读取配置文件
-    echo "${Green}读取配置文件${Reset}"
+    echo - e "${Green}读取配置文件${Reset}"
     # 初始化 proxy-providers 部分
     proxy_providers="proxy-providers:"
     # 动态添加机场
@@ -681,9 +689,9 @@ Configure() {
         i=$((i + 1))
     done
     # 修改配置文件
-    echo "${Green}正在修改配置文件${Reset}"
+    echo - e "${Green}正在修改配置文件${Reset}"
     # 写入配置文件
-    echo "${Green}开始写入配置文件${Reset}"
+    echo - e "${Green}开始写入配置文件${Reset}"
     # 使用 awk 将 proxy-providers 插入到指定位置
     awk -v providers="$proxy_providers" '
     /^# 机场订阅/ {
@@ -694,10 +702,10 @@ Configure() {
     { print }
     ' "$CONFIG_FILE" > temp.yaml && mv temp.yaml "$CONFIG_FILE"
     # 验证修改后的配置文件格式
-    echo "${Green}验证修改后的配置文件格式${Reset}"
+    echo - e "${Green}验证修改后的配置文件格式${Reset}"
     # 提示保存位置
-    echo "${Green}mihomo 配置已完成并保存到 ${CONFIG_FILE} 文件夹${Reset}"
-    echo "${Green}mihomo 配置完成，正在启动中${Reset}"
+    echo - e "${Green}mihomo 配置已完成并保存到 ${CONFIG_FILE} 文件夹${Reset}"
+    echo - e "${Green}mihomo 配置完成，正在启动中${Reset}"
     # 启动和配置服务
     case "$OS" in
         "debian" | "ubuntu" | "centos")
@@ -714,17 +722,17 @@ Configure() {
             rc-update add mihomo
             ;;
         *)
-            echo "${Red}不支持的操作系统${Reset}"
+            echo - e "${Red}不支持的操作系统${Reset}"
             exit 1
             ;;
     esac
-    echo "${Green}已设置开机自启动${Reset}"
+    echo - e "${Green}已设置开机自启动${Reset}"
     # 调用函数获取
     GetLocal_ip
     # 引导语
-    echo "${Green}恭喜你，你的 mihomo 已经配置完成${Green}"
-    echo "${Red}输入 mihomo 就能启动面板${Green}"
-    echo "使用 ${Red}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
+    echo - e "${Green}恭喜你，你的 mihomo 已经配置完成${Green}"
+    echo - e "${Red}输入 mihomo 就能启动面板${Green}"
+    echo - e "使用 ${Red}http://$ipv4:9090/ui${Reset} 访问你的 mihomo 管理面板面板"
     # 返回主菜单
     Start_Main
 }
@@ -732,27 +740,27 @@ Configure() {
 # 主菜单
 Main() {
     clear
-    echo "================================="
-    echo "${Green}欢迎使用 mihomo 一键脚本 Beta 版${Reset}"
-    echo "${Green}作者：${Yellow}${Red}AdsJK567${Reset}"
-    echo "${Green}请保证科学上网已经开启${Reset}"
-    echo "${Green}选项3，可以修改你的机场订阅链接${Reset}"
-    echo "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
-    echo "================================="
-    echo "${Green} 0${Reset}、更新脚本"
-    echo "${Green} 8${Reset}、退出脚本"
-    echo "---------------------------------"
-    echo "${Green} 1${Reset}、安装 mihomo"
-    echo "${Green} 2${Reset}、更新 mihomo"
-    echo "${Green} 3${Reset}、配置 mihomo"
-    echo "${Green} 4${Reset}、卸载 mihomo"
-    echo "---------------------------------"
-    echo "${Green} 5${Reset}、启动 mihomo"
-    echo "${Green} 6${Reset}、停止 mihomo"
-    echo "${Green} 7${Reset}、重启 mihomo"
-    echo "================================="
+    echo - e "================================="
+    echo - e "${Green}欢迎使用 mihomo 一键脚本 Beta 版${Reset}"
+    echo - e "${Green}作者：${Yellow}${Red}AdsJK567${Reset}"
+    echo - e "${Green}请保证科学上网已经开启${Reset}"
+    echo - e "${Green}选项3，可以修改你的机场订阅链接${Reset}"
+    echo - e "${Green}安装过程中可以按 ctrl+c 强制退出${Reset}"
+    echo - e "================================="
+    echo - e "${Green} 0${Reset}、更新脚本"
+    echo - e "${Green} 8${Reset}、退出脚本"
+    echo - e "---------------------------------"
+    echo - e "${Green} 1${Reset}、安装 mihomo"
+    echo - e "${Green} 2${Reset}、更新 mihomo"
+    echo - e "${Green} 3${Reset}、配置 mihomo"
+    echo - e "${Green} 4${Reset}、卸载 mihomo"
+    echo - e "---------------------------------"
+    echo - e "${Green} 5${Reset}、启动 mihomo"
+    echo - e "${Green} 6${Reset}、停止 mihomo"
+    echo - e "${Green} 7${Reset}、重启 mihomo"
+    echo - e "================================="
     Show_Status
-    echo "================================="
+    echo - e "================================="
     read -p "请输入选项[0-8]：" num
     case "$num" in
         1) Check_ip_forward; Install ;;
@@ -764,7 +772,7 @@ Main() {
         7) Restart ;;
         8) exit 0 ;;
         0) Update_Shell ;;
-        *) echo "${Red}无效选项，请重新选择${Reset}" 
+        *) echo - e "${Red}无效选项，请重新选择${Reset}" 
            exit 1 ;;
     esac
 }
