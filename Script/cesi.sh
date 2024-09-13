@@ -537,14 +537,6 @@ Install() {
     SERVICE_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
     wget -O "$SYSTEM_FILE" "$SERVICE_URL" && chmod 755 "$SYSTEM_FILE"
     echo "${Green}mihomo 安装完成，开始配置${Reset}"
-    # 将脚本移动到 /usr/local/bin
-    if [ -f "$SCRIPT_FILE" ]; then
-        cp "$SCRIPT_FILE" /usr/local/bin/mihomo
-        chmod +x /usr/local/bin/mihomo
-    else
-        echo "${Red}当前脚本文件不存在: $SCRIPT_FILE${Reset}"
-       exit 1
-    fi
     # 开始配置 config 文件
     Configure
 }
