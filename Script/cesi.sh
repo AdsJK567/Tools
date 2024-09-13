@@ -478,19 +478,19 @@ Install() {
             # 更新系统
             apt-get update && apt-get dist-upgrade -y
             # 安装必要软件
-            apt-get install -y jq unzip curl git wget vim dnsutils openssl coreutils grep gawk iptables
+            apt-get install -y unzip curl git wget vim  openssl coreutils grep gawk iptables
             ;;
         "centos")
             # 更新系统
             yum update -y
             # 安装必要软件
-            yum install -y jq unzip curl git wget vim bind-utils openssl coreutils grep gawk iptables-services
+            yum install -y unzip curl git wget vim  openssl coreutils grep gawk iptables-services
             ;;
         "alpine")
             # 更新系统
             apk update && apk upgrade
             # 安装必要软件
-            apk add jq unzip curl git wget vim bind-tools openssl coreutils grep gawk iptables
+            apk add unzip curl git wget vim  openssl coreutils grep gawk iptables
             ;;
         *)
             echo - e "${Red}不支持的操作系统${Reset}"
