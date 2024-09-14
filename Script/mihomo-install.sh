@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-09 18:50
+#!date = 2024-09-14 17:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.2"
+sh_ver="1.0.3"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -41,22 +41,6 @@ GetLocal_ip(){
     ipv6=$(ip addr show $(ip route | grep default | awk '{print $5}') | grep 'inet6 ' | awk '{print $2}' | cut -d/ -f1)
 }
 
-# 检查是否安装
-Check_install(){
-    if [ ! -f "$FILE" ]; then
-        echo -e "${Red}mihomo 未安装${Reset}"
-    fi
-}
-
-# 检查服务状态
-Check_status() {
-    if pgrep -x "mihomo" > /dev/null; then
-        status="running"
-    else
-        status="stopped"
-    fi
-}
-
 # 获取当前架构
 Get_the_schema(){
     ARCH_RAW=$(uname -m)
@@ -68,6 +52,22 @@ Get_the_schema(){
         's390x')    ARCH='s390x';;
         *)          echo -e "${Red}不支持的架构：${ARCH_RAW}${Reset}"; exit 1;;
     esac
+}
+
+# 检查和设置 IP 转发参数
+Check_ip_forward() {
+    # 要检查的设置
+    local IPV4_FORWARD="net.ipv4.ip_forward = 1"
+    # 检查是否已存在 net.ipv4.ip_forward = 1
+    if grep -q "^${IPV4_FORWARD}$" "$SYSCTL_FILE"; then
+        # 不执行 sysctl -p，因为设置已经存在
+        return
+    fi
+    # 如果设置不存在，则添加并执行 sysctl -p
+    echo "$IPV4_FORWARD" >> "$SYSCTL_FILE"
+    # 立即生效
+    sysctl -p
+    echo -e "${Green}IP 转发开启成功${Reset}"
 }
 
 # 更新系统并安装基本插件
@@ -83,6 +83,8 @@ Install_mihomo() {
     if [[ -e $FOLDERS ]]; then
         rm -rf $FOLDERS
     fi
+    # 检查和设置 IP 转发参数
+    Check_ip_forward
     # 创建文件夹
     mkdir -p $FOLDERS && cd $FOLDERS || { echo -e "${Red}创建或进入 $FOLDERS 目录失败${Reset}"; exit 1; }
     # 获取架构
@@ -158,14 +160,12 @@ Install_mihomo() {
         Configure
     else
         echo -e "配置文件生成已被取消"
-        echo -e "你需要自己上传配置文件到${Green} $CONFIG_FILE ${Reset}位置"
+        echo -e "你需要自己上传配置文件到${Green} $CONFIG_FILE 位置${Reset}"
     fi
 }
 
 # 配置
 Configure() {
-    # 检查是否安装
-    Check_install
     # 下载配置文件
     CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo.yaml"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
