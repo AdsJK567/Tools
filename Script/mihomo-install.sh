@@ -158,7 +158,7 @@ Install_mihomo() {
         Configure
     else
         echo -e "配置文件生成已被取消"
-        echo -e "你需要自己上传配置文件到${Green} $CONFIG_FILE 位置${Reset}"
+        echo -e "你需要自己上传配置文件到${Green} $CONFIG_FILE ${Reset}位置"
     fi
 }
 
