@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载、修改配置等
-#!date = 2024-09-14 17:00
+#!date = 2024-09-14 17:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.1.5"
+sh_ver="1.1.6"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -108,22 +108,6 @@ Get_the_schema(){
         's390x')    ARCH='s390x';;
         *)          echo -e "${Red}不支持的架构：${ARCH_RAW}${Reset}"; exit 1;;
     esac
-}
-
-# 检查和设置 IP 转发参数
-Check_ip_forward() {
-    # 要检查的设置
-    local IPV4_FORWARD="net.ipv4.ip_forward = 1"
-    # 检查是否已存在 net.ipv4.ip_forward = 1
-    if grep -q "^${IPV4_FORWARD}$" "$SYSCTL_FILE"; then
-        # 不执行 sysctl -p，因为设置已经存在
-        return
-    fi
-    # 如果设置不存在，则添加并执行 sysctl -p
-    echo "$IPV4_FORWARD" >> "$SYSCTL_FILE"
-    # 立即生效
-    sysctl -p
-    echo -e "${Green}IP 转发开启成功${Reset}"
 }
 
 # 启动
@@ -482,7 +466,7 @@ Main() {
     echo "================================="
     read -p "请输入选项[0-8]：" num
     case "$num" in
-        1) Check_ip_forward; Install ;;
+        1) Install ;;
         2) Update ;;
         3) Uninstall ;;
         4) Configure ;;
