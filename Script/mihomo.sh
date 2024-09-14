@@ -233,6 +233,9 @@ Uninstall() {
     # 检查卸载是否成功
     if [ ! -f "$SYSTEM_FILE" ] && [ ! -d "$FOLDERS" ]; then
         echo -e "${Green}mihomo 卸载完成${Reset}"
+        echo ""
+        echo -e "卸载成功，如果你想删除此脚本，则退出脚本后，输入 ${Green}rm /usr/bin/mihomo -f${Reset} 进行删除"
+        echo ""
     else
         echo -e "${Red}卸载过程中出现问题，请手动检查${Reset}"
     fi
