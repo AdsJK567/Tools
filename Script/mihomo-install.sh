@@ -153,11 +153,12 @@ Install_mihomo() {
     echo "----------------------------------------"
     echo -e ""
     # 询问是否配置文件
-    read -rp "安装完成，是否开始配置 config 文件？(y/n): " if_configure
-    if [[ $if_configure == [Yy] ]]; then
+    read -rp "安装完成，是否开始配置 config 文件？(y/n): " confirm
+    if [[ $confirm == [Yy] ]]; then
         Configure
     else
-        echo "配置文件生成已被取消。"
+        echo -e "配置文件生成已被取消"
+        echo -e "你需要自己上传配置文件到${Green} $CONFIG_FILE 位置${Reset}"
     fi
 }
 
