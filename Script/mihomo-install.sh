@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-14 17:50
+#!date = 2024-09-14 17:55
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -148,11 +148,16 @@ Install_mihomo() {
     if [ -f /root/mihomo-install.sh ]; then
         rm -f /root/mihomo-install.sh
     fi
+    # 设置开机启动
+    systemctl enable mihomo
+    echo -e "${Green}已设置开机自启动${Reset}"
+    echo -e ""
     echo -e ""
     echo -e "mihomo 管理脚本使用方法"
     echo "========================================"
     echo "mihomo            - 显示管理菜单 (功能更多)"
     echo "----------------------------------------"
+    echo -e ""
     echo -e ""
     # 询问是否配置文件
     read -rp "安装完成，是否开始配置 config 文件？(y/n): " confirm
@@ -220,11 +225,6 @@ Configure() {
     systemctl daemon-reload
     # 立即启动 mihomo 服务
     systemctl start mihomo
-    # # 检查 mihomo 服务状态
-    # systemctl status mihomo
-    # 设置开机启动
-    systemctl enable mihomo
-    echo -e "${Green}已设置开机自启动${Reset}"
     # 调用函数获取
     GetLocal_ip
     # 引导语
