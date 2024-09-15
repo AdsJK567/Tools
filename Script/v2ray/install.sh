@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#!name = v2ray 一键脚本 Beta
+#!name = v2ray 一键脚本 Beta 安装
 #!desc = 支持，安装、更新、卸载等
 #!date = 2024-09-15 16:10
 #!author = thNylHx ChatGPT
