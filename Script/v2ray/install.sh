@@ -55,7 +55,7 @@ Get_the_schema(){
 Install_base() {
     apt-get update && apt-get dist-upgrade -y
     # 安装常用插件
-    apt-get install -y unzip git wget vim dnsutils coreutils grep gawk iptables
+    apt-get install -y jq unzip curl git wget dnsutils openssl coreutils grep gawk
 }
 
 # 安装
