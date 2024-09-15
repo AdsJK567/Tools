@@ -1,6 +1,6 @@
 #!name = mihomo TUN 配置文件
 #!desc = 说明：理论上适用于所有的 Meta 内核，使用最新的 mrs 规则
-#!date = 2024-08-24 22:15
+#!date = 2024-09-15 15:30
 #!source = https://wiki.metacubex.one/example/conf/#__tabbed_1_2
 #!author = AdsJK567
 
@@ -89,14 +89,23 @@ dns:
     - "+.lan"
     - "+.local"
     - "+.market.xiaomi.com"
-   # 使用的DNS服务器
+    - "+.msftncsi.com"
+    - "+.msftconnecttest.com"
+  # 默认的域名解析服务器
   nameserver:
-    - https://120.53.53.53/dns-query
     - https://223.5.5.5/dns-query
-  # 代理服务器使用的DNS服务器
+    - https://120.53.53.53/dns-query
+  # 代理节点域名解析服务器，仅用于解析代理节点的域名
   proxy-server-nameserver:
-    - https://dns.google/dns-query
-    - https://dns.cloudflare.com/dns-query
+    - https://223.5.5.5/dns-query
+    - https://120.53.53.53/dns-query
+  nameserver-policy:
+    "rule-set:China,Bilibili":
+      - https://120.53.53.53/dns-query
+      - https://223.5.5.5/dns-query
+    "rule-set:GlobalGFW":
+      - "https://dns.cloudflare.com/dns-query"
+      - "https://dns.google/dns-query"
 
 # 单个出站代理节点
 proxies: 
