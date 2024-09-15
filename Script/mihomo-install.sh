@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #!name = mihomo 一键脚本 Beta
-#!desc = 支持，安装、更新、卸载等
+#!desc = 安装脚本
 #!date = 2024-09-14 17:55
 #!author = AdsJK567 ChatGPT
 
