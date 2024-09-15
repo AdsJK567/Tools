@@ -2,7 +2,7 @@
 
 #!name = v2ray 一键配置
 #!desc = 配置文件
-#!date = 2024-09-15 16:10
+#!date = 2024-09-15 16:50
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -81,7 +81,6 @@ Configure() {
         read -p "请输入监听端口 (留空以随机生成端口): " PORT
         if [[ -z "$PORT" ]]; then
             PORT=$(shuf -i 10000-65000 -n 1)
-            echo -e "随机生成的监听端口: ${Green}$PORT${Reset}"
         elif [[ "$PORT" -lt 10000 || "$PORT" -gt 65000 ]]; then
             echo -e "${Red}端口号必须在10000到65000之间。${Reset}"
             exit 1
@@ -90,18 +89,28 @@ Configure() {
         read -p "请输入 v2ray UUID (留空以生成随机UUID): " UUID
         if [[ -z "$UUID" ]]; then
             UUID=$(cat /proc/sys/kernel/random/uuid)
-            echo -e "随机生成的UUID: ${Green}$UUID${Reset}"
         fi
         # WebSocket 路径处理 (仅限选择2或4时)
         if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
             read -p "请输入 WebSocket 路径 (留空以生成随机路径): " WS_PATH
             if [[ -z "$WS_PATH" ]]; then
                 WS_PATH=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
-                echo -e "随机生成的 WebSocket 路径: ${Green}/$WS_PATH${Reset}"
             else
                 WS_PATH="${WS_PATH#/}"
-                echo -e "WebSocket 路径: ${Green}/$WS_PATH${Reset}"
             fi
+        fi
+        echo -e "配置文件已生成："
+        case $confirm in
+            1) echo -e "  - 协议: ${Green}vmess+tcp${Reset}" ;;
+            2) echo -e "  - 协议: ${Green}vmess+ws${Reset}" ;;
+            3) echo -e "  - 协议: ${Green}vmess+tcp+tls${Reset}" ;;
+            4) echo -e "  - 协议: ${Green}vmess+ws+tls${Reset}" ;;
+            *) echo -e "${Red}无效选项${Reset}" && exit 1 ;;
+        esac
+        echo -e "  - 端口: ${Green}$PORT${Reset}"
+        echo -e "  - UUID: ${Green}$UUID${Reset}"
+        if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
+            echo -e "  - WebSocket 路径: ${Green}/$WS_PATH${Reset}"
         fi
     fi
     # 读取配置文件
