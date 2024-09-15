@@ -144,9 +144,9 @@ Install_mihomo() {
     fi
     # 刷新可执行文件缓存
     hash -r
-    # 删除 mihomo-install.sh 脚本
-    if [ -f /root/mihomo-install.sh ]; then
-        rm -f /root/mihomo-install.sh
+    # 删除 mihomo-cdn.sh 脚本
+    if [ -f /root/mihomo-cdn.sh ]; then
+        rm -f /root/mihomo-cdn.sh
     fi
     # 设置开机启动
     systemctl enable mihomo
