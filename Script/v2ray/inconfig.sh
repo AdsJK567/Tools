@@ -2,7 +2,7 @@
 
 #!name = v2ray 一键配置
 #!desc = 配置文件
-#!date = 2024-09-15 08:35
+#!date = 2024-09-15 15:50
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -17,7 +17,6 @@ sh_ver="0.0.5"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
-FILE="/root/v2ray/v2ray"
 CONFIG_FILE="/root/v2ray/config.json"
 
 # 获取本机 IP
@@ -33,68 +32,73 @@ Configure() {
     # 下载基础配置文件
     CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/v2ray.json"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
-    # 询问是否进行快速配置
-    read -rp "是否进行快速配置？(y/n): " quick_setup
-    if [[ "$quick_setup" == [Yy] ]]; then
-        echo -e "选择快速配置，自动生成配置如下："
+    # 询问是否快速配置，默认值为 y
+    read -rp "是否快速生成配置文件？(y/n 默认[y]): " confirm
+    confirm=${confirm:-y}  # 如果用户未输入，默认值为 y
+    if [[ "$confirm" == [Yy] ]]; then
+        # 快速配置：选择协议
+        echo -e "请选择协议："
         echo -e "${Green}1${Reset}、vmess+tcp"
         echo -e "${Green}2${Reset}、vmess+ws"
         echo -e "${Green}3${Reset}、vmess+tcp+tls"
         echo -e "${Green}4${Reset}、vmess+ws+tls"
-        echo "==================================="
-        read -p "输入数字选择 (1-4): " confirm
-        if [[ "$confirm" -lt 1 || "$confirm" -gt 4 ]]; then
-            echo -e "${Red}无效选项${Reset}"
-            exit 1
+        read -rp "输入数字选择协议 (1-4 默认[1]): " confirm
+        confirm=${confirm:-1}  # 默认为 1
+        # 随机生成配置项
+        PORT=$(shuf -i 10000-65000 -n 1)
+        UUID=$(cat /proc/sys/kernel/random/uuid)
+        # 如果选择了 WebSocket 协议
+        if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
+            WS_PATH=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
+        fi
+        # 显示生成的配置
+        echo -e "快速配置文件生成完成："
+        case $confirm in
+            1) echo -e "  - 协议: ${Green}vmess+tcp${Reset}" ;;
+            2) echo -e "  - 协议: ${Green}vmess+ws${Reset}" ;;
+            3) echo -e "  - 协议: ${Green}vmess+tcp+tls${Reset}" ;;
+            4) echo -e "  - 协议: ${Green}vmess+ws+tls${Reset}" ;;
+            *) echo -e "${Red}无效选项${Reset}" && exit 1 ;;
+        esac
+        echo -e "  - 端口: ${Green}$PORT${Reset}"
+        echo -e "  - UUID: ${Green}$UUID${Reset}"
+        if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
+            echo -e "  - WebSocket 路径: ${Green}/$WS_PATH${Reset}"
         fi
     else
-        # 手动选择协议
-        echo -e "${Green}v2ray 开始配置${Reset}"
-        echo "==================================="
-        echo "使用说明"
-        echo "选择 3 和 4 后，需要申请证书才能使用"
-        echo "==================================="
+        # 手动配置
+        echo -e "请选择协议："
         echo -e "${Green}1${Reset}、vmess+tcp"
         echo -e "${Green}2${Reset}、vmess+ws"
         echo -e "${Green}3${Reset}、vmess+tcp+tls"
         echo -e "${Green}4${Reset}、vmess+ws+tls"
-        echo "==================================="
-        read -p "输入数字选择 (1-4，默认1): " confirm
-        confirm=${confirm:-1}  # 如果用户没有输入，默认为1
-
-        if [[ "$confirm" -lt 1 || "$confirm" -gt 4 ]]; then
-            echo -e "${Red}无效选项${Reset}"
+        read -rp "输入数字选择协议 (1-4 默认[1]): " confirm
+        confirm=${confirm:-1}  # 默认为 1
+        # 端口处理
+        read -p "请输入监听端口 (留空以随机生成端口): " PORT
+        if [[ -z "$PORT" ]]; then
+            PORT=$(shuf -i 10000-65000 -n 1)
+            echo -e "随机生成的监听端口: ${Green}$PORT${Reset}"
+        elif [[ "$PORT" -lt 10000 || "$PORT" -gt 65000 ]]; then
+            echo -e "${Red}端口号必须在10000到65000之间。${Reset}"
             exit 1
         fi
-    fi
-    # 端口处理
-    read -p "请输入监听端口 (留空以随机生成端口): " PORT
-    if [[ -z "$PORT" ]]; then
-        PORT=$(shuf -i 10000-65000 -n 1)
-        echo -e "随机生成的监听端口: ${Green}$PORT${Reset}"
-    elif [[ "$PORT" -lt 10000 || "$PORT" -gt 65000 ]]; then
-        echo -e "${Red}端口号必须在10000到65000之间。${Reset}"
-        exit 1
-    fi
-    # UUID 处理
-    read -p "请输入 v2ray UUID (留空以生成随机UUID): " UUID
-    if [[ -z "$UUID" ]]; then
-        if command -v uuidgen >/dev/null 2>&1; then
-            UUID=$(uuidgen)
-        else
+        # UUID 处理
+        read -p "请输入 v2ray UUID (留空以生成随机UUID): " UUID
+        if [[ -z "$UUID" ]]; then
             UUID=$(cat /proc/sys/kernel/random/uuid)
+            echo -e "随机生成的UUID: ${Green}$UUID${Reset}"
         fi
-        echo -e "随机生成的UUID: ${Green}$UUID${Reset}"
-    fi
-    # WebSocket 路径处理
-    if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
-        read -p "请输入 WebSocket 路径 (留空以生成随机路径): " WS_PATH
-        if [[ -z "$WS_PATH" ]]; then
-            WS_PATH=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
-            echo -e "随机生成的 WebSocket 路径: ${Green}/$WS_PATH${Reset}"
-        else
-            WS_PATH="${WS_PATH#/}"
-            echo -e "WebSocket 路径: ${Green}/$WS_PATH${Reset}"
+        # WebSocket 路径处理 (仅限选择2或4时)
+        if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
+            read -p "请输入 WebSocket 路径 (留空以生成随机路径): " WS_PATH
+            if [[ -z "$WS_PATH" ]]; then
+                WS_PATH=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
+                echo -e "随机生成的 WebSocket 路径: ${Green}/$WS_PATH${Reset}"
+            else
+                WS_PATH="${WS_PATH#/}"
+                echo -e "WebSocket 路径: ${Green}/$WS_PATH${Reset}"
+            fi
         fi
     fi
     # 读取配置文件
@@ -176,7 +180,6 @@ Configure() {
     # 获取本地 IP 地址
     GetLocal_ip
     # 获取 IP 地址的位置信息
-    echo -e "${Green}获取IP地址位置信息${Reset}"
     GEO_INFO=$(curl -s "https://ipinfo.io/$ipv4")
     CITY=$(echo "$GEO_INFO" | jq -r .city)
     COUNTRY=$(echo "$GEO_INFO" | jq -r .country)
