@@ -129,7 +129,6 @@ Install_v2ray() {
         curl -o ./inconfig.sh -Ls https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/v2ray/inconfig.sh
         source inconfig.sh
         rm inconfig.sh -f
-        Configure
     fi
 }
 
