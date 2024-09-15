@@ -2,7 +2,7 @@
 
 #!name = v2ray 一键配置
 #!desc = 配置文件
-#!date = 2024-09-15 15:50
+#!date = 2024-09-15 16:10
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -32,6 +32,9 @@ Configure() {
     # 下载基础配置文件
     CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/v2ray.json"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
+    echo -e ""
+    echo -e "${Green}开始配置 v2ray ${Reset}"
+    echo -e ""
     # 询问是否快速配置，默认值为 y
     read -rp "是否快速生成配置文件？(y/n 默认[y]): " confirm
     confirm=${confirm:-y}  # 如果用户未输入，默认值为 y
@@ -52,7 +55,7 @@ Configure() {
             WS_PATH=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
         fi
         # 显示生成的配置
-        echo -e "快速配置文件生成完成："
+        echo -e "配置文件已生成："
         case $confirm in
             1) echo -e "  - 协议: ${Green}vmess+tcp${Reset}" ;;
             2) echo -e "  - 协议: ${Green}vmess+ws${Reset}" ;;
