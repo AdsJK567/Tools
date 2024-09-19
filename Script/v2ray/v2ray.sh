@@ -2,7 +2,7 @@
 
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-15 16:15
+#!date = 2024-09-19 10:15
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -13,7 +13,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.2"
+sh_ver="1.0.4"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
@@ -308,6 +308,11 @@ Update_Shell() {
 
 # 安装
 Install() {
+    # 检查是否安装 
+    if [ -f "$FILE" ]; then
+        echo -e "${Green}v2ray 已经安装，请勿重复安装${Reset}"
+        Start_Main
+    fi
     bash <(curl -Ls https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/v2ray/install.sh)
 }
 
