@@ -231,7 +231,7 @@ Update_Shell() {
     # 获取当前版本
     echo -e "${Green}开始检查是否有更新${Reset}"
     # 获取最新版本号
-    sh_ver_url="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo.sh"
+    sh_ver_url="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo/mihomo.sh"
     sh_new_ver=$(wget --no-check-certificate -qO- "$sh_ver_url" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     # 最新版本无需更新
     if [ "$sh_ver" == "$sh_new_ver" ]; then
@@ -289,7 +289,7 @@ Install() {
         echo -e "${Green}mihomo 已安装，请勿重复安装！${Reset}"
         Start_Main
     fi
-    bash <(curl -Ls https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-install.sh)
+    bash <(curl -Ls https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo/install.sh)
 }
 
 # 更新
