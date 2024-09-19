@@ -136,7 +136,7 @@ Install_mihomo() {
         rm -f /usr/bin/mihomo
     fi
     # 下载脚本并设置执行权限
-    INSTALL_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo.sh"
+    INSTALL_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo/mihomo.sh"
     curl -s -o /usr/bin/mihomo "$INSTALL_URL" && chmod +x /usr/bin/mihomo
     # 确保 /usr/bin 在 PATH 中
     if [[ ":$PATH:" != *":/usr/bin:"* ]]; then
@@ -144,9 +144,9 @@ Install_mihomo() {
     fi
     # 刷新可执行文件缓存
     hash -r
-    # 删除 mihomo-install.sh 脚本
-    if [ -f /root/mihomo-install.sh ]; then
-        rm -f /root/mihomo-install.sh
+    # 删除 install.sh 脚本
+    if [ -f /root/install.sh ]; then
+        rm -f /root/install.sh
     fi
     # 设置开机启动
     systemctl enable mihomo
