@@ -285,6 +285,11 @@ Update_Shell() {
 
 # 安装
 Install() {
+    # 检测安装状态
+    if [ -f "$FILE" ]; then
+        echo -e "${Green}mihomo 已安装，请勿重复安装！${Reset}"
+        Start_Main
+    fi
     bash <(curl -Ls https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo-cdn.sh)
 }
 
