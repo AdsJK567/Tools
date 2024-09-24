@@ -2,7 +2,7 @@
 
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-24 15:00
+#!date = 2024-09-24 15:35
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -13,7 +13,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.6"
+sh_ver="1.0.7"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
@@ -382,8 +382,6 @@ Update() {
 
 # 配置
 Configure() {
-    # 检查是否安装
-    Check_install
     # 下载基础配置文件
     CONFIG_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/v2ray.json"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
@@ -436,7 +434,6 @@ Configure() {
         read -p "请输入监听端口 (留空以随机生成端口): " PORT
         if [[ -z "$PORT" ]]; then
             PORT=$(shuf -i 10000-65000 -n 1)
-            echo -e "随机生成的监听端口: ${Green}$PORT${Reset}"
         elif [[ "$PORT" -lt 10000 || "$PORT" -gt 65000 ]]; then
             echo -e "${Red}端口号必须在10000到65000之间。${Reset}"
             exit 1
@@ -445,18 +442,28 @@ Configure() {
         read -p "请输入 v2ray UUID (留空以生成随机UUID): " UUID
         if [[ -z "$UUID" ]]; then
             UUID=$(cat /proc/sys/kernel/random/uuid)
-            echo -e "随机生成的UUID: ${Green}$UUID${Reset}"
         fi
         # WebSocket 路径处理 (仅限选择2或4时)
         if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
             read -p "请输入 WebSocket 路径 (留空以生成随机路径): " WS_PATH
             if [[ -z "$WS_PATH" ]]; then
                 WS_PATH=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
-                echo -e "随机生成的 WebSocket 路径: ${Green}/$WS_PATH${Reset}"
             else
                 WS_PATH="${WS_PATH#/}"
-                echo -e "WebSocket 路径: ${Green}/$WS_PATH${Reset}"
             fi
+        fi
+        echo -e "配置文件已生成："
+        case $confirm in
+            1) echo -e "  - 协议: ${Green}vmess+tcp${Reset}" ;;
+            2) echo -e "  - 协议: ${Green}vmess+ws${Reset}" ;;
+            3) echo -e "  - 协议: ${Green}vmess+tcp+tls${Reset}" ;;
+            4) echo -e "  - 协议: ${Green}vmess+ws+tls${Reset}" ;;
+            *) echo -e "${Red}无效选项${Reset}" && exit 1 ;;
+        esac
+        echo -e "  - 端口: ${Green}$PORT${Reset}"
+        echo -e "  - UUID: ${Green}$UUID${Reset}"
+        if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
+            echo -e "  - WebSocket 路径: ${Green}/$WS_PATH${Reset}"
         fi
     fi
     # 读取配置文件
@@ -538,7 +545,6 @@ Configure() {
     # 获取本地 IP 地址
     GetLocal_ip
     # 获取 IP 地址的位置信息
-    echo -e "${Green}获取IP地址位置信息${Reset}"
     GEO_INFO=$(curl -s "https://ipinfo.io/$ipv4")
     CITY=$(echo "$GEO_INFO" | jq -r .city)
     COUNTRY=$(echo "$GEO_INFO" | jq -r .country)
@@ -567,8 +573,6 @@ Configure() {
     systemctl daemon-reload
     # 立即启动
     systemctl start v2ray
-    # # 运行状况
-    # systemctl status v2ray
     echo -e "${Green}已设置开机自启${Reset}"
     # 设置为开机自启
     systemctl enable v2ray
