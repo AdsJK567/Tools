@@ -2,7 +2,7 @@
 
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-19 10:15
+#!date = 2024-09-24 15:00
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -13,7 +13,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.4"
+sh_ver="1.0.5"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
@@ -139,8 +139,6 @@ Start() {
         Start_Main
     fi
     echo -e "${Green}v2ray 准备启动中${Reset}"
-    # 重新加载
-    systemctl reload v2ray
     # 发送启动命令
     systemctl enable v2ray
     # 启动服务
@@ -196,8 +194,6 @@ Restart() {
     # 检查是否安装
     Check_install
     echo -e "${Green}v2ray 准备重启中${Reset}"
-    # 重新加载
-    systemctl reload v2ray
     # 重启服务
     if systemctl restart v2ray; then
         echo -e "${Green}v2ray 重启命令已发出${Reset}"
