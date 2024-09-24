@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta 加速版
 #!desc = 安装脚本
-#!date = 2024-09-15 08:30
+#!date = 2024-09-23 15:05
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.1"
+sh_ver="1.0.2"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -136,7 +136,7 @@ Install_mihomo() {
         rm -f /usr/bin/mihomo
     fi
     # 下载脚本并设置执行权限
-    INSTALL_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomocdn.sh"
+    INSTALL_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Script/mihomo/mihomo-cdn.sh"
     curl -s -o /usr/bin/mihomo "$INSTALL_URL" && chmod +x /usr/bin/mihomo
     # 确保 /usr/bin 在 PATH 中
     if [[ ":$PATH:" != *":/usr/bin:"* ]]; then
@@ -144,9 +144,9 @@ Install_mihomo() {
     fi
     # 刷新可执行文件缓存
     hash -r
-    # 删除 mihomo-cdn.sh 脚本
-    if [ -f /root/mihomo-cdn.sh ]; then
-        rm -f /root/mihomo-cdn.sh
+    # 删除 install-cdn.sh 脚本
+    if [ -f /root/install-cdn.sh ]; then
+        rm -f /root/install-cdn.sh
     fi
     # 设置开机启动
     systemctl enable mihomo
