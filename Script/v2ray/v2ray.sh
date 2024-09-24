@@ -792,13 +792,13 @@ Main() {
     echo "-----------------------------------"
     echo -e "${Green} 1${Reset}、安装 v2ray"
     echo -e "${Green} 2${Reset}、更新 v2ray"
-    echo -e "${Green} 3${Reset}、配置 v2ray"
-    echo -e "${Green} 4${Reset}、卸载 v2ray"
+    echo -e "${Green} 3${Reset}、卸载 v2ray"
     echo "-----------------------------------"
-    echo -e "${Green} 5${Reset}、启动 v2ray"
-    echo -e "${Green} 6${Reset}、停止 v2ray"
-    echo -e "${Green} 7${Reset}、重启 v2ray"
+    echo -e "${Green} 4${Reset}、启动 v2ray"
+    echo -e "${Green} 5${Reset}、停止 v2ray"
+    echo -e "${Green} 6${Reset}、重启 v2ray"
     echo "-----------------------------------"
+    echo -e "${Green} 7${Reset}、修改配置"
     echo -e "${Green} 8${Reset}、查看配置"
     echo -e "${Green} 9${Reset}、申请证书"
     echo "==================================="
@@ -808,11 +808,11 @@ Main() {
     case "$num" in
         1) Install ;;
         2) Update ;;
-        3) Configure ;;
-        4) Uninstall ;;
-        5) Start ;;
-        6) Stop ;;
-        7) Restart ;;
+        3) Uninstall ;;
+        4) Start ;;
+        5) Stop ;;
+        6) Restart ;;
+        7) Configure ;;
         8) View ;;
         9) Request_Cert ;;
         0) Update_Shell ;;
