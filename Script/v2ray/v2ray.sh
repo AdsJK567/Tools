@@ -13,7 +13,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.5"
+sh_ver="1.0.6"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
