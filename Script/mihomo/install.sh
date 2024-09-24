@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="1.0.1"
+sh_ver="0.0.6"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
