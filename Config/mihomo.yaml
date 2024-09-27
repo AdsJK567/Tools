@@ -143,7 +143,7 @@ proxy-groups:
   - {name: Apple, type: select, proxies: [国内直连, 手动选择, 自动选择, 香港节点, 台湾节点, 美国节点, 狮城节点, 日本节点, 韩国节点]}
   - {name: Bilibili, type: select, proxies: [国内直连, 手动选择, 自动选择, 香港节点, 台湾节点, 美国节点, 狮城节点, 日本节点, 韩国节点]}
   - {name: China, type: select, proxies: [国内直连, 手动选择, 自动选择, 香港节点, 台湾节点, 美国节点, 狮城节点, 日本节点, 韩国节点]}
-  - {name: 兜底规则, <<: *pg}
+  - {name: 兜底规则, type: select, proxies: [手动选择, 自动选择, 国内直连, 全部节点]}
   # 地区分组
   - {name: 香港节点, <<: *at, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: 台湾节点, <<: *at, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$" }
