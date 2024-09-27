@@ -172,8 +172,8 @@ Install_mihomo() {
 # 配置
 Configure() {
     # 配置文件 URL
-    CONFIG_URL1="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo.yaml"
-    CONFIG_URL2="https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo-tp.yaml"
+    CONFIG_URL1="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo.yaml"
+    CONFIG_URL2="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo-tp.yaml"
     # 选择模式
     while true; do
         echo -e "请选择运行模式："
