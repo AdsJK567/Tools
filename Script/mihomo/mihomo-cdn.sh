@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta 加速版
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-24 15:10
+#!date = 2024-09-27 10:00
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.3"
+sh_ver="1.0.4"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -378,8 +378,23 @@ Update() {
 Configure() {
     # 检查是否安装
     Check_install
+    # 配置文件 URL
+    CONFIG_URL1="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo.yaml"
+    CONFIG_URL2="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo-tp.yaml"
+    # 选择模式
+    while true; do
+        echo -e "请选择运行模式："
+        echo -e "${Green}1${Reset}. TUN 模式"
+        echo -e "${Green}2${Reset}. TProxy 模式"
+        read -rp "输入数字选择协议 (1-2 默认[1]): " confirm
+        confirm=${confirm:-1}  # 默认为 1
+        case "$confirm" in
+            1) CONFIG_URL="$CONFIG_URL1"; break ;;
+            2) CONFIG_URL="$CONFIG_URL2"; break ;;
+            *) echo -e "${Red}无效的选择，请输入 1 或 2。${Reset}" ;;
+        esac
+    done
     # 下载配置文件
-    CONFIG_URL="https://gh-proxy.com/https://raw.githubusercontent.com/AdsJK567/Tools/main/Config/mihomo.yaml"
     curl -s -o "$CONFIG_FILE" "$CONFIG_URL"
     # 获取用户输入的机场数量，默认为 1，且限制为 5 个以内
     while true; do
