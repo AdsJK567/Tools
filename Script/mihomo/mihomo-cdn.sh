@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta 加速版
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-27 10:00
+#!date = 2024-09-27 12:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.4"
+sh_ver="1.0.5"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -249,6 +249,10 @@ Update_Shell() {
         case $confirm in
             [Yy]* )
                 echo -e "开始下载最新版本 [ ${Green}${sh_new_ver}${Reset} ]"
+                # 删除旧的 /usr/bin/mihomo 文件
+                if [ -f "/usr/bin/mihomo" ]; then
+                    rm /usr/bin/mihomo
+                fi
                 # 下载新的 mihomo 文件并移动到 /usr/bin
                 wget -O /usr/bin/mihomo --no-check-certificate "$sh_ver_url"
                 # 赋予可执行权限
@@ -256,11 +260,6 @@ Update_Shell() {
                 # 确保 /usr/bin 在 PATH 中
                 if [[ ":$PATH:" != *":/usr/bin:"* ]]; then
                     export PATH=$PATH:/usr/bin
-                fi
-
-                # 删除旧的 /usr/bin/mihomo 文件
-                if [ -f "/usr/bin/mihomo" ]; then
-                    rm /usr/bin/mihomo
                 fi
                 # 刷新可执行文件缓存
                 hash -r
