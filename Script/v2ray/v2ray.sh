@@ -3,7 +3,7 @@
 
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-30 12:25
+#!date = 2024-09-30 12:50
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -14,7 +14,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.9"
+sh_ver="1.1.1"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
@@ -111,19 +111,22 @@ View() {
     # 检查是否安装
     Check_install
     echo -e "${Red}v2ray 配置信息${Reset}"
-    # 读取并显示 port、UUID、path
+    # 读取并显示 port、UUID、path、protocol 和 network
     if [[ -f "${CONFIG_FILE}" ]]; then
         port=$(jq -r '.inbounds[0].port // "未设置"' "${CONFIG_FILE}")
         id=$(jq -r '.inbounds[0].settings.clients[0].id // "未设置"' "${CONFIG_FILE}")
         path=$(jq -r '.inbounds[0].streamSettings.wsSettings.path // "未设置"' "${CONFIG_FILE}")
+        protocol=$(jq -r '.inbounds[0].protocol // "未设置"' "${CONFIG_FILE}")
+        network=$(jq -r '.inbounds[0].streamSettings.network // "未设置"' "${CONFIG_FILE}")
         # 如果 path 为 "null" 或空，则显示“TCP 协议不需要设置”
         if [[ "$path" == "null" || -z "$path" ]]; then
             path="TCP 协议不需要设置"
         fi
         # 显示信息
-        echo -e "端口: ${Green}${port}${Reset}"
-        echo -e "UUID: ${Green}${id}${Reset}"
-        echo -e "WS路径: ${Green}${path}${Reset}"
+        echo -e "  - 协议: ${Green}${protocol}+${network}${Reset}"
+        echo -e "  - 端口: ${Green}${port}${Reset}"
+        echo -e "  - UUID: ${Green}${id}${Reset}"
+        echo -e "  - WS路径: ${Green}${path}${Reset}"
     else
         echo -e "${Red}找不到配置文件 ${CONFIG_FILE}，请检查路径是否正确${Reset}"
     fi
