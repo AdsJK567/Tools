@@ -1,8 +1,9 @@
+
 #!/bin/bash
 
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-24 15:35
+#!date = 2024-09-30 12:20
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -13,7 +14,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.7"
+sh_ver="1.0.8"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
@@ -120,9 +121,9 @@ View() {
             path="TCP 协议不需要设置"
         fi
         # 显示信息
-        echo -e "port: ${Green}${port}${Reset}"
-        echo -e "id: ${Green}${id}${Reset}"
-        echo -e "path: ${Green}${path}${Reset}"
+        echo -e "端口: ${Green}${port}${Reset}"
+        echo -e "UUID: ${Green}${id}${Reset}"
+        echo -e "WebSocket 路径: ${Green}${path}${Reset}"
     else
         echo -e "${Red}找不到配置文件 ${CONFIG_FILE}，请检查路径是否正确${Reset}"
     fi
@@ -344,7 +345,7 @@ Update() {
                     *)       echo -e "不支持的架构：[ ${Red}${ARCH}${Reset} ]"; exit 1;;
                 esac
                 # 开始下载
-                DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/v${VERSION}/${FILENAME}"
+                DOWNLOAD_URL="https://github.com/v2fly/v2ray-core/releases/download/v${LATEST_VERSION}/${FILENAME}"
                 echo -e "开始下载最新版本：[ ${Green}${LATEST_VERSION}${Reset} ]"
                 wget -t 3 -T 30 "${DOWNLOAD_URL}" -O "${FILENAME}" || { echo -e "${Red}下载失败${Reset}"; exit 1; }
                 echo -e "[ ${Green}${LATEST_VERSION}${Reset} ] 下载完成，开始更新"
