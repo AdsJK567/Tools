@@ -3,7 +3,7 @@
 
 #!name = v2ray 一键脚本 Beta
 #!desc = 支持，安装、更新、卸载等
-#!date = 2024-09-30 12:20
+#!date = 2024-09-30 12:25
 #!author = thNylHx ChatGPT
 
 set -e -o pipefail
@@ -14,7 +14,7 @@ Green="\033[32m"  ## 绿色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.8"
+sh_ver="1.0.9"
 
 # 定义全局变量
 FOLDERS="/root/v2ray"
@@ -123,7 +123,7 @@ View() {
         # 显示信息
         echo -e "端口: ${Green}${port}${Reset}"
         echo -e "UUID: ${Green}${id}${Reset}"
-        echo -e "WebSocket 路径: ${Green}${path}${Reset}"
+        echo -e "WS路径: ${Green}${path}${Reset}"
     else
         echo -e "${Red}找不到配置文件 ${CONFIG_FILE}，请检查路径是否正确${Reset}"
     fi
@@ -420,7 +420,7 @@ Configure() {
         echo -e "  - 端口: ${Green}$PORT${Reset}"
         echo -e "  - UUID: ${Green}$UUID${Reset}"
         if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
-            echo -e "  - WebSocket 路径: ${Green}/$WS_PATH${Reset}"
+            echo -e "  - WS路径: ${Green}/$WS_PATH${Reset}"
         fi
     else
         # 手动配置
@@ -464,7 +464,7 @@ Configure() {
         echo -e "  - 端口: ${Green}$PORT${Reset}"
         echo -e "  - UUID: ${Green}$UUID${Reset}"
         if [[ "$confirm" == "2" || "$confirm" == "4" ]]; then
-            echo -e "  - WebSocket 路径: ${Green}/$WS_PATH${Reset}"
+            echo -e "  - WS路径: ${Green}/$WS_PATH${Reset}"
         fi
     fi
     # 读取配置文件
