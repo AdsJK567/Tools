@@ -469,7 +469,7 @@ Panel(){
     WEB_URL3="https://github.com/MetaCubeX/Razord-meta.git"
     # 检查是否已安装
     if [ -d "$WEB_FILE" ]; then
-        echo -e "${Yellow}检测到面板已安装在 $WEB_FILE。${Reset}"
+        echo -e "${Yellow}检测到面板已安装在。${Reset}"
         while true; do
             read -rp "是否替换当前安装的面板？(y/n): " replace
             case "$replace" in
