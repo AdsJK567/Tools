@@ -1,6 +1,6 @@
 #!name = mihomo TUN 配置文件
 #!desc = 说明：理论上适用于所有的 Meta 内核，使用最新的 mrs 规则
-#!date = 2024-09-21 10:15
+#!date = 2024-10-07 16:15
 #!source = https://wiki.metacubex.one/example/conf/#__tabbed_1_2
 #!author = AdsJK567
 
@@ -114,7 +114,7 @@ proxies:
     udp: true
     
 # 策略组相关
-pg: &pg {type: select, proxies: [手动选择, 自动选择, 香港节点, 台湾节点, 美国节点, 狮城节点, 日本节点, 韩国节点]}
+pg: &pg {type: select, proxies: [手动选择, 自动选择, 香港节点, 台湾节点, 美国节点, 狮城节点, 日本节点, 韩国节点, 全部节点]}
 # 手动选择策略
 mt: &mt {type: select, include-all: true}
 # 自动优选策略
