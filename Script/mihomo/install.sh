@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta
 #!desc = 安装脚本
-#!date = 2024-09-27 10:00
+#!date = 2024-10-07 19:20
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 脚本版本
-sh_ver="0.0.7"
+sh_ver="0.0.8"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -169,9 +169,10 @@ Install_mihomo() {
 
 # 面板
 Panel(){
+    # 管理面板 URL
     WEB_URL1="https://github.com/MetaCubeX/Yacd-meta.git"
     WEB_URL2="https://github.com/metacubex/metacubexd.git"
-    WEB_URL2="https://github.com/MetaCubeX/Razord-meta.git"
+    WEB_URL3="https://github.com/MetaCubeX/Razord-meta.git"
     # 选择模式
     while true; do
         echo -e "请选择面板："
@@ -181,13 +182,34 @@ Panel(){
         read -rp "输入数字选择协议 (1-3 默认[1]): " confirm
         confirm=${confirm:-1}  # 默认为 1
         case "$confirm" in
-            1) WEB_URL="$WEB_URL1"; break ;;
-            2) WEB_URL="$WEB_URL2"; break ;;
-            3) WEB_URL="$WEB_URL3"; break ;;
+            1) 
+                WEB_URL="$WEB_URL1"
+                PANEL_NAME="Yacd 面板"
+                break
+                ;;
+            2) 
+                WEB_URL="$WEB_URL2"
+                PANEL_NAME="metacubexd 面板"
+                break
+                ;;
+            3) 
+                WEB_URL="$WEB_URL3"
+                PANEL_NAME="dashboard 面板"
+                break
+                ;;
             *) echo -e "${Red}无效的选择，请输入 1、2 或 3。${Reset}" ;;
         esac
     done
+    # 确认选择的面板名称
+    echo -e "${Green}你选择的是：${Reset} $PANEL_NAME"
+    # 开始下载
     echo -e "${Green}开始下载 mihomo 管理面板${Reset}"
+    # 检查 URL 是否为空
+    if [ -z "$WEB_URL" ]; then
+        echo -e "${Red}错误：仓库 URL 为空！请检查选择逻辑。${Reset}"
+        exit 1
+    fi
+    # 下载仓库
     git clone "$WEB_URL" -b gh-pages "$WEB_FILE"
 }
 
