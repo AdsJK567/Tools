@@ -18,7 +18,7 @@ White="\033[37m"  ## 白色
 Reset="\033[0m"  ## 黑色
 
 # 定义脚本版本
-sh_ver="1.0.8"
+sh_ver="1.0.7"
 
 # 全局变量路径
 FOLDERS="/root/mihomo"
@@ -469,7 +469,7 @@ Panel(){
     WEB_URL3="https://github.com/MetaCubeX/Razord-meta.git"
     # 检查是否已安装
     if [ -d "$WEB_FILE" ]; then
-        echo -e "${Yellow}检测到面板已安装在。${Reset}"
+        echo -e "${Yellow}检测到面板已安装。${Reset}"
         while true; do
             read -rp "是否替换当前安装的面板？(y/n): " replace
             case "$replace" in
