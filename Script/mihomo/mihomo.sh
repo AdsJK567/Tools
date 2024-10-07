@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本
 #!desc = 支持，安装、更新、卸载、修改配置等
-#!date = 2024-10-07 20:30
+#!date = 2024-10-07 20:50
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -466,7 +466,8 @@ Panel(){
     # 管理面板 URL
     WEB_URL1="https://github.com/MetaCubeX/Yacd-meta.git"
     WEB_URL2="https://github.com/metacubex/metacubexd.git"
-    WEB_URL3="https://github.com/MetaCubeX/Razord-meta.git"
+    WEB_URL4="https://github.com/MetaCubeX/Razord-meta.git"
+    WEB_URL3="https://github.com/AdsJK567/clash-dashboard.git"
     # 检查是否已安装
     if [ -d "$WEB_FILE" ]; then
         echo -e "${Yellow}检测到面板已安装。${Reset}"
@@ -491,8 +492,9 @@ Panel(){
         echo -e "请选择面板："
         echo -e "${Green}1${Reset}. Yacd 面板"
         echo -e "${Green}2${Reset}. metacubexd 面板"
-        echo -e "${Green}3${Reset}. dashboard 魔改版面板"
-        read -rp "输入数字选择协议 (1-3 默认[1]): " confirm
+        echo -e "${Green}3${Reset}. dashboard 面板"
+        echo -e "${Green}4${Reset}. dashboard 魔改版面板"
+        read -rp "输入数字选择协议 (1-4 默认[1]): " confirm
         confirm=${confirm:-1}  # 默认为 1
         case "$confirm" in
             1) 
@@ -507,16 +509,26 @@ Panel(){
                 ;;
             3) 
                 WEB_URL="$WEB_URL3"
+                PANEL_NAME="dashboard 面板"
+                break
+                ;;
+            4) 
+                WEB_URL="$WEB_URL4"
                 PANEL_NAME="dashboard 魔改版面板"
                 break
                 ;;
-            *) echo -e "${Red}无效的选择，请输入 1、2 或 3。${Reset}" ;;
+            *) echo -e "${Red}无效的选择，请输入 1、2、3 或 4。${Reset}" ;;
         esac
     done
     # 确认选择的面板名称
     echo -e "你选择的是：${Green} $PANEL_NAME ${Reset}"
     # 开始下载
     echo -e "${Green}开始下载 mihomo 管理面板${Reset}"
+    # 检查 URL 是否为空
+    if [ -z "$WEB_URL" ]; then
+        echo -e "${Red}错误：仓库 URL 为空！请检查选择逻辑。${Reset}"
+        exit 1
+    fi
     # 下载仓库
     git clone "$WEB_URL" -b gh-pages "$WEB_FILE"
     echo -e "${Green} $PANEL_NAME 安装成功${Reset}"
