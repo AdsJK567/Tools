@@ -122,10 +122,8 @@ Install_mihomo() {
     chmod 755 mihomo
     # 记录版本信息
     echo "$VERSION" > "$VERSION_FILE"
-    # 下载 UI
-    echo -e "${Green}开始下载 mihomo 管理面板${Reset}"
-    WEB_URL="https://github.com/metacubex/metacubexd.git"
-    git clone "$WEB_URL" -b gh-pages "$WEB_FILE"
+    # 安装面板
+    Panel
     # 下载系统配置文件
     echo -e "${Green}开始下载 mihomo 的 Service 系统配置${Reset}"
     SERVICE_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
@@ -167,6 +165,30 @@ Install_mihomo() {
         echo -e "配置文件生成已被取消"
         echo -e "你需要自己上传配置文件到${Green} $CONFIG_FILE 位置${Reset}"
     fi
+}
+
+# 面板
+Panel(){
+    WEB_URL1="https://github.com/MetaCubeX/Yacd-meta.git"
+    WEB_URL2="https://github.com/metacubex/metacubexd.git"
+    WEB_URL2="https://github.com/MetaCubeX/Razord-meta.git"
+    # 选择模式
+    while true; do
+        echo -e "请选择面板："
+        echo -e "${Green}1${Reset}. Yacd 面板"
+        echo -e "${Green}2${Reset}. metacubexd 面板"
+        echo -e "${Green}3${Reset}. dashboard 面板"
+        read -rp "输入数字选择协议 (1-3 默认[1]): " confirm
+        confirm=${confirm:-1}  # 默认为 1
+        case "$confirm" in
+            1) WEB_URL="$WEB_URL1"; break ;;
+            2) WEB_URL="$WEB_URL2"; break ;;
+            3) WEB_URL="$WEB_URL3"; break ;;
+            *) echo -e "${Red}无效的选择，请输入 1、2 或 3。${Reset}" ;;
+        esac
+    done
+    echo -e "${Green}开始下载 mihomo 管理面板${Reset}"
+    git clone "$WEB_URL" -b gh-pages "$WEB_FILE"
 }
 
 # 配置
