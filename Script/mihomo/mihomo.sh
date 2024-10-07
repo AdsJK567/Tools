@@ -472,7 +472,8 @@ Panel(){
     if [ -d "$WEB_FILE" ]; then
         echo -e "${Yellow}检测到面板已安装。${Reset}"
         while true; do
-            read -rp "是否替换当前安装的面板？(y/n): " replace
+            read -rp "是否替换当前安装的面板？(y/n, 默认[yes]): " replace
+            replace=${replace:-y}
             case "$replace" in
                 [Yy]* ) 
                     echo -e "${Green}开始替换面板${Reset}"
