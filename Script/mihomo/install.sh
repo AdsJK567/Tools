@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta
 #!desc = 安装脚本
-#!date = 2024-10-07 19:20
+#!date = 2024-10-07 19:25
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -123,7 +123,7 @@ Install_mihomo() {
     # 记录版本信息
     echo "$VERSION" > "$VERSION_FILE"
     # 下载 UI
-    Panel
+    Install_Panel
     # 下载系统配置文件
     echo -e "${Green}开始下载 mihomo 的 Service 系统配置${Reset}"
     SERVICE_URL="https://raw.githubusercontent.com/AdsJK567/Tools/main/Service/mihomo.service"
@@ -168,7 +168,7 @@ Install_mihomo() {
 }
 
 # 面板
-Panel(){
+Install_Panel(){
     # 管理面板 URL
     WEB_URL1="https://github.com/MetaCubeX/Yacd-meta.git"
     WEB_URL2="https://github.com/metacubex/metacubexd.git"
@@ -194,14 +194,14 @@ Panel(){
                 ;;
             3) 
                 WEB_URL="$WEB_URL3"
-                PANEL_NAME="dashboard 面板"
+                PANEL_NAME="dashboard 魔改面板"
                 break
                 ;;
             *) echo -e "${Red}无效的选择，请输入 1、2 或 3。${Reset}" ;;
         esac
     done
     # 确认选择的面板名称
-    echo -e "${Green}你选择的是：${Reset} $PANEL_NAME"
+    echo -e "你选择的是：${Green} $PANEL_NAME ${Reset}"
     # 开始下载
     echo -e "${Green}开始下载 mihomo 管理面板${Reset}"
     # 检查 URL 是否为空
