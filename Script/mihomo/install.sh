@@ -122,7 +122,7 @@ Install_mihomo() {
     chmod 755 mihomo
     # 记录版本信息
     echo "$VERSION" > "$VERSION_FILE"
-    # 安装面板
+    # 下载 UI
     Panel
     # 下载系统配置文件
     echo -e "${Green}开始下载 mihomo 的 Service 系统配置${Reset}"
