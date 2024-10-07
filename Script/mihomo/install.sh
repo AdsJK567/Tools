@@ -2,7 +2,7 @@
 
 #!name = mihomo 一键脚本 Beta
 #!desc = 安装脚本
-#!date = 2024-10-07 19:25
+#!date = 2024-10-07 19:30
 #!author = AdsJK567 ChatGPT
 
 set -e -o pipefail
@@ -178,7 +178,7 @@ Install_Panel(){
         echo -e "请选择面板："
         echo -e "${Green}1${Reset}. Yacd 面板"
         echo -e "${Green}2${Reset}. metacubexd 面板"
-        echo -e "${Green}3${Reset}. dashboard 面板"
+        echo -e "${Green}3${Reset}. dashboard 魔改版面板"
         read -rp "输入数字选择协议 (1-3 默认[1]): " confirm
         confirm=${confirm:-1}  # 默认为 1
         case "$confirm" in
@@ -194,7 +194,7 @@ Install_Panel(){
                 ;;
             3) 
                 WEB_URL="$WEB_URL3"
-                PANEL_NAME="dashboard 魔改面板"
+                PANEL_NAME="dashboard 魔改版面板"
                 break
                 ;;
             *) echo -e "${Red}无效的选择，请输入 1、2 或 3。${Reset}" ;;
