@@ -517,14 +517,11 @@ Panel(){
     echo -e "你选择的是：${Green} $PANEL_NAME ${Reset}"
     # 开始下载
     echo -e "${Green}开始下载 mihomo 管理面板${Reset}"
-    # 检查 URL 是否为空
-    if [ -z "$WEB_URL" ]; then
-        echo -e "${Red}错误：仓库 URL 为空！请检查选择逻辑。${Reset}"
-        exit 1
-    fi
     # 下载仓库
     git clone "$WEB_URL" -b gh-pages "$WEB_FILE"
     echo -e "${Green} $PANEL_NAME 安装成功${Reset}"
+    # 返回主菜单
+    Start_Main
 }
 
 # 主菜单
